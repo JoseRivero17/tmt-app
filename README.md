@@ -31,6 +31,7 @@ Estructura de paquetes (`app/src/main/java/com/uade/tmt/`):
 |---|---|---|
 | `presentation/theme` | Presentación | Tema Material 3, colores y tipografía (modo claro/oscuro) |
 | `presentation/navigation` | Presentación | Grafo de navegación y barra inferior |
+| `presentation/components` | Presentación | Componentes compartidos de estado: carga, vacío, error, sin conexión, última actualización |
 | `presentation/<feature>` | Presentación | Pantallas Compose, `UiState` y ViewModel de cada flujo |
 | `domain/model` | Dominio | Modelos de dominio (sin dependencias de Android) |
 | `domain/repository` | Dominio | Interfaces de repositorio |

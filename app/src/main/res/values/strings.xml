@@ -6,4 +6,16 @@
     <string name="seccion_ranking">Ranking</string>
     <string name="seccion_clubes">Clubes</string>
     <string name="seccion_perfil">Mi perfil</string>
+
+    <!-- Estados de pantalla compartidos (presentation/components) -->
+    <string name="estado_cargando">Cargando…</string>
+    <string name="estado_reintentar">Reintentar</string>
+    <string name="estado_error_generico">No pudimos cargar la información. Intentá de nuevo en unos minutos.</string>
+    <string name="estado_vacio_generico">No hay resultados para mostrar.</string>
+    <string name="estado_limpiar_filtros">Limpiar filtros</string>
+    <string name="estado_sin_conexion_titulo">Sin conexión</string>
+    <string name="estado_sin_conexion_mensaje">No hay conexión a internet y todavía no hay datos guardados en el dispositivo. Conectate y volvé a intentar.</string>
+    <string name="estado_ultima_actualizacion">Actualizado el %1$s</string>
+    <string name="estado_aviso_datos_guardados">Sin conexión: mostrando datos guardados</string>
+    <string name="formato_fecha_ultima_actualizacion" translatable="false">dd/MM HH:mm</string>
 </resources>
