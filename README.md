@@ -31,6 +31,7 @@ Estructura de paquetes (`app/src/main/java/com/uade/tmt/`):
 |---|---|---|
 | `presentation/theme` | Presentación | Tema Material 3, colores y tipografía (modo claro/oscuro) |
 | `presentation/navigation` | Presentación | Grafo de navegación y barra inferior |
+| `presentation/components` | Presentación | Componentes compartidos de estado: carga, vacío, error, sin conexión, última actualización |
 | `presentation/<feature>` | Presentación | Pantallas Compose, `UiState` y ViewModel de cada flujo |
 | `domain/model` | Dominio | Modelos de dominio (sin dependencias de Android) |
 | `domain/repository` | Dominio | Interfaces de repositorio |
@@ -39,6 +40,7 @@ Estructura de paquetes (`app/src/main/java/com/uade/tmt/`):
 | `data/remote` | Datos | Fuente remota: extracción del HTML del sitio (RNF04) |
 | `data/mapper` | Datos | Conversión entre DTOs, entidades y modelos de dominio |
 | `data/repository` | Datos | Implementaciones de los repositorios (estrategia offline first) |
+| `di` | Transversal | Inyección de dependencias manual — `AppContainer` |
 
 Regla de dependencias: `presentation` → `domain` ← `data`. El dominio no conoce Android,
 ni Room, ni el parser, así que un cambio en el HTML del sitio solo afecta a `data/remote`.
