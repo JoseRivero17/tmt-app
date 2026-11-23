@@ -1,4 +1,4 @@
-package com.uade.tmt.ui.theme
+package com.uade.tmt.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
