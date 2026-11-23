@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">TMT</string>
+
+    <!-- Secciones principales (barra inferior) -->
+    <string name="seccion_torneos">Torneos</string>
+    <string name="seccion_ranking">Ranking</string>
+    <string name="seccion_clubes">Clubes</string>
+    <string name="seccion_perfil">Mi perfil</string>
 </resources>
