@@ -6,12 +6,14 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DateRangePicker
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -68,7 +70,7 @@ internal fun FiltrosTorneos(
             onElegir = { desde, hasta -> onFiltrar(filtros.copy(desde = desde, hasta = hasta)) },
         )
         if (filtros.hayAlguno) {
-            TextButton(onClick = onLimpiar) { Text(stringResource(R.string.estado_limpiar_filtros)) }
+            TextButton(onClick = onLimpiar) { Text(stringResource(R.string.torneos_limpiar)) }
         }
     }
 }
@@ -85,7 +87,8 @@ private fun ChipConMenu(
         FilterChip(
             selected = elegido != null,
             onClick = { abierto = true },
-            label = { Text(if (elegido == null) etiqueta else "$etiqueta: $elegido") },
+            label = { Text(elegido ?: etiqueta) },
+            leadingIcon = if (elegido != null) { { Tilde() } } else null,
             trailingIcon = { Icon(painterResource(R.drawable.ic_desplegar), contentDescription = null) },
         )
         DropdownMenu(expanded = abierto, onDismissRequest = { abierto = false }) {
@@ -100,6 +103,15 @@ private fun ChipConMenu(
             }
         }
     }
+}
+
+@Composable
+private fun Tilde() {
+    Icon(
+        painter = painterResource(R.drawable.ic_elegido),
+        contentDescription = null,
+        modifier = Modifier.size(FilterChipDefaults.IconSize),
+    )
 }
 
 @Composable
@@ -121,6 +133,7 @@ private fun ChipFechas(
                 },
             )
         },
+        leadingIcon = if (desde != null) { { Tilde() } } else null,
         trailingIcon = { Icon(painterResource(R.drawable.ic_desplegar), contentDescription = null) },
     )
     if (abierto) {

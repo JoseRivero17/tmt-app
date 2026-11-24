@@ -70,6 +70,7 @@ class TorneosViewModel(
             dias = filtrar(torneos, filtros)
                 .groupBy { it.fecha }
                 .map { (fecha, delDia) -> DiaTorneos(fecha, delDia) },
+            total = torneos.size,
             filtros = filtros,
             opciones = OpcionesFiltro(
                 divisiones = torneos.flatMap { it.categorias }.map { it.division }.distinct().sorted(),

@@ -45,6 +45,7 @@ import com.uade.tmt.presentation.components.OfflineState
 import com.uade.tmt.presentation.mensaje
 import com.uade.tmt.presentation.theme.TMTTheme
 import com.uade.tmt.presentation.torneos.EstadoTorneo
+import com.uade.tmt.presentation.torneos.Renglon
 import com.uade.tmt.presentation.torneos.TorneoDePrueba
 import com.uade.tmt.presentation.torneos.larga
 
@@ -78,7 +79,7 @@ private fun TorneoDetalleContent(
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         TopAppBar(
-            title = {},
+            title = { Text(stringResource(R.string.torneos_detalle_titulo)) },
             navigationIcon = {
                 IconButton(onClick = onVolver) {
                     Icon(painterResource(R.drawable.ic_volver), stringResource(R.string.torneos_volver))
@@ -134,7 +135,15 @@ private fun DatosTorneo(torneo: Torneo) {
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.semantics { heading() },
         )
-        Text(text = torneo.fecha.larga(), style = MaterialTheme.typography.titleMedium)
+        Renglon(R.drawable.ic_fecha) {
+            Text(text = torneo.fecha.larga(), style = MaterialTheme.typography.bodyLarge)
+        }
+        Renglon(R.drawable.ic_clubes) {
+            Text(
+                text = torneo.sede?.let { listOfNotNull(it, torneo.direccion).joinToString("\n") } ?: torneo.localidad,
+                style = MaterialTheme.typography.bodyLarge,
+            )
+        }
 
         if (torneo.cancelado) {
             Text(
@@ -145,12 +154,6 @@ private fun DatosTorneo(torneo: Torneo) {
         }
 
         torneo.club?.let { Dato(stringResource(R.string.torneos_detalle_club), it) }
-        torneo.sede?.let { sede ->
-            Dato(
-                etiqueta = stringResource(R.string.torneos_detalle_sede),
-                valor = listOfNotNull(sede, torneo.direccion).joinToString("\n"),
-            )
-        } ?: Dato(stringResource(R.string.torneos_detalle_localidad), torneo.localidad)
 
         Seccion(stringResource(R.string.torneos_detalle_divisiones))
         torneo.categorias.forEach { FilaDivision(it) }

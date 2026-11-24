@@ -36,7 +36,6 @@ import com.uade.tmt.presentation.components.EmptyState
 import com.uade.tmt.presentation.components.ErrorState
 import com.uade.tmt.presentation.components.FalloBanner
 import com.uade.tmt.presentation.components.LastUpdatedBanner
-import com.uade.tmt.presentation.components.LoadingState
 import com.uade.tmt.presentation.components.OfflineState
 import com.uade.tmt.presentation.mensaje
 import com.uade.tmt.presentation.theme.TMTTheme
@@ -77,15 +76,9 @@ private fun TorneosContent(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
-        Text(
-            text = stringResource(R.string.torneos_titulo),
-            style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 12.dp)
-                .semantics { heading() },
-        )
+        EncabezadoInicio(cantidadTorneos = (estado as? TorneosUiState.Contenido)?.total)
         when (estado) {
-            TorneosUiState.Cargando -> LoadingState(message = stringResource(R.string.estado_cargando))
+            TorneosUiState.Cargando -> SiluetaTorneos()
 
             is TorneosUiState.Error -> if (estado.motivo == MotivoFallo.SIN_CONEXION) {
                 OfflineState(onRetry = onActualizar)
@@ -180,7 +173,7 @@ private fun SinTorneos(hayFiltros: Boolean, onLimpiarFiltros: () -> Unit, modifi
 private fun EncabezadoDia(fecha: LocalDate) {
     Surface(modifier = Modifier.fillMaxWidth(), color = MaterialTheme.colorScheme.surface) {
         Text(
-            text = fecha.larga(),
+            text = fecha.encabezado(),
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier
@@ -218,6 +211,7 @@ private fun TorneosPreview() {
                             listOf(TorneoDePrueba, TorneoDePrueba.copy(codigo = 2, cancelado = true)),
                         ),
                     ),
+                    total = 2,
                     filtros = FiltrosTorneo(division = "7ma"),
                     opciones = OpcionesFiltro(listOf("7ma"), listOf("Villa Ejemplo")),
                     actualizadoEn = Instant.EPOCH,

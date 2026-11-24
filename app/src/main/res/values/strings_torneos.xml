@@ -1,6 +1,14 @@
 <resources>
     <!-- RF01: calendario y detalle de torneos -->
-    <string name="torneos_titulo">Torneos</string>
+    <string name="torneos_marca_1">TMT</string>
+    <string name="torneos_marca_2">Go</string>
+    <string name="torneos_titulo">Encontrá tu próximo torneo</string>
+    <plurals name="torneos_en_calendario">
+        <item quantity="one">%1$d torneo en el calendario</item>
+        <item quantity="other">%1$d torneos en el calendario</item>
+    </plurals>
+    <string name="torneos_hoy">HOY · %1$s</string>
+    <string name="torneos_manana">MAÑANA · %1$s</string>
     <string name="torneos_sin_coincidencias">Ningún torneo coincide con los filtros.</string>
     <string name="torneos_sin_proximos">No hay próximos torneos publicados.</string>
     <string name="torneos_filtro_division">División</string>
@@ -8,16 +16,16 @@
     <string name="torneos_filtro_fechas">Fechas</string>
     <string name="torneos_filtro_todas">Todas</string>
     <string name="torneos_filtro_rango">%1$s – %2$s</string>
+    <string name="torneos_limpiar">Limpiar</string>
     <string name="torneos_aplicar">Aplicar</string>
     <string name="torneos_cancelar">Cancelar</string>
     <string name="torneos_volver">Volver</string>
+    <string name="torneos_detalle_titulo">Torneo</string>
     <string name="torneos_estado_cancelado">Cancelado</string>
-    <string name="torneos_estado_inscripcion">Inscripción online</string>
+    <string name="torneos_estado_inscripcion">Inscripción abierta</string>
     <string name="torneos_estado_sin_inscripcion">Sin inscripción online</string>
     <string name="torneos_aviso_cancelado">Este torneo fue cancelado. No se puede reservar un lugar.</string>
     <string name="torneos_detalle_club">Club organizador</string>
-    <string name="torneos_detalle_sede">Sede</string>
-    <string name="torneos_detalle_localidad">Localidad</string>
     <string name="torneos_detalle_divisiones">Divisiones</string>
     <string name="torneos_detalle_division">%1$s división</string>
     <string name="torneos_detalle_precios">Valor de la inscripción</string>
