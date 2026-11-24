@@ -11,4 +11,8 @@ interface SitioService {
 
     @GET("torneos_ampliar.asp")
     suspend fun torneo(@Query("codigo") codigo: Int): String
+
+    /** Siempre con división: la página sin filtro tarda más que el timeout (RNF03). */
+    @GET("ranking.asp")
+    suspend fun ranking(@Query("fDiv") division: String): String
 }
