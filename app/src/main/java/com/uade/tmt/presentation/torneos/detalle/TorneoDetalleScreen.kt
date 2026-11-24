@@ -217,7 +217,7 @@ private fun FilaDivision(categoria: CategoriaTorneo) {
 @PreviewLightDark
 @Composable
 private fun TorneoDetallePreview() {
-    TMTTheme(dynamicColor = false) {
+    TMTTheme {
         Surface {
             TorneoDetalleContent(
                 estado = TorneoDetalleUiState.Contenido(TorneoDePrueba, null, false, MotivoFallo.TIMEOUT, false),

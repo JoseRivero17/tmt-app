@@ -208,7 +208,7 @@ internal val TorneoDePrueba = Torneo(
 @PreviewLightDark
 @Composable
 private fun TorneosPreview() {
-    TMTTheme(dynamicColor = false) {
+    TMTTheme {
         Surface {
             TorneosContent(
                 estado = TorneosUiState.Contenido(

@@ -31,7 +31,7 @@ fun EmptyState(
 @PreviewLightDark
 @Composable
 private fun EmptyStatePreview() {
-    TMTTheme(dynamicColor = false) {
+    TMTTheme {
         Surface {
             EmptyState(
                 message = stringResource(R.string.estado_vacio_generico),

@@ -60,7 +60,7 @@ fun FalloBanner(
 @PreviewLightDark
 @Composable
 private fun FalloBannerPreview() {
-    TMTTheme(dynamicColor = false) {
+    TMTTheme {
         FalloBanner(motivo = MotivoFallo.TIMEOUT, onRetry = {})
     }
 }

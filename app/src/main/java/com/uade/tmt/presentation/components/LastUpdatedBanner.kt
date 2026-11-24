@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -48,12 +47,12 @@ fun LastUpdatedBanner(
     }
 
     val containerColor = if (isOffline) {
-        MaterialTheme.colorScheme.tertiaryContainer
+        MaterialTheme.colorScheme.surfaceContainerHighest
     } else {
-        MaterialTheme.colorScheme.surfaceVariant
+        MaterialTheme.colorScheme.surface
     }
     val contentColor = if (isOffline) {
-        MaterialTheme.colorScheme.onTertiaryContainer
+        MaterialTheme.colorScheme.onSurface
     } else {
         MaterialTheme.colorScheme.onSurfaceVariant
     }
@@ -67,8 +66,7 @@ fun LastUpdatedBanner(
     ) {
         Row(
             modifier = Modifier
-                .heightIn(min = MinTouchTarget)
-                .padding(horizontal = 16.dp, vertical = 8.dp),
+                .padding(horizontal = 16.dp, vertical = if (isOffline) 12.dp else 4.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -100,7 +98,7 @@ private const val PREVIEW_MILLIS = 1_763_900_000_000L
 @PreviewLightDark
 @Composable
 private fun LastUpdatedBannerPreview() {
-    TMTTheme(dynamicColor = false) {
+    TMTTheme {
         Surface {
             LastUpdatedBanner(lastUpdatedMillis = PREVIEW_MILLIS)
         }
@@ -110,7 +108,7 @@ private fun LastUpdatedBannerPreview() {
 @PreviewLightDark
 @Composable
 private fun LastUpdatedBannerOfflinePreview() {
-    TMTTheme(dynamicColor = false) {
+    TMTTheme {
         Surface {
             LastUpdatedBanner(lastUpdatedMillis = PREVIEW_MILLIS, isOffline = true)
         }
