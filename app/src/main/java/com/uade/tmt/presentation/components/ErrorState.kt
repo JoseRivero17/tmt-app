@@ -30,7 +30,7 @@ fun ErrorState(
 @PreviewLightDark
 @Composable
 private fun ErrorStatePreview() {
-    TMTTheme(dynamicColor = false) {
+    TMTTheme {
         Surface {
             ErrorState(onRetry = {})
         }

@@ -1,11 +1,11 @@
 <resources>
-    <string name="app_name">TMT</string>
+    <string name="app_name">TMT Go</string>
 
     <!-- Secciones principales (barra inferior) -->
     <string name="seccion_torneos">Torneos</string>
-    <string name="seccion_ranking">Ranking</string>
+    <string name="seccion_ranking">Jugadores</string>
     <string name="seccion_clubes">Clubes</string>
-    <string name="seccion_perfil">Mi perfil</string>
+    <string name="seccion_perfil">Mi TMT</string>
 
     <!-- Estados de pantalla compartidos (presentation/components) -->
     <string name="estado_cargando">Cargando…</string>

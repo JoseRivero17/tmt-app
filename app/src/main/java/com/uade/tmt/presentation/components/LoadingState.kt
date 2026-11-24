@@ -49,7 +49,7 @@ fun LoadingState(
 @PreviewLightDark
 @Composable
 private fun LoadingStatePreview() {
-    TMTTheme(dynamicColor = false) {
+    TMTTheme {
         Surface {
             LoadingState(message = stringResource(R.string.estado_cargando))
         }

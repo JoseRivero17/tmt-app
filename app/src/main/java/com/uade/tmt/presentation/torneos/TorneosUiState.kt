@@ -17,6 +17,8 @@ sealed interface TorneosUiState {
     /** Hay datos guardados. Puede estar actualizándose o haber fallado la última actualización. */
     data class Contenido(
         val dias: List<DiaTorneos>,
+        /** Cantidad de torneos guardados, sin contar los filtros. */
+        val total: Int,
         val filtros: FiltrosTorneo,
         val opciones: OpcionesFiltro,
         val actualizadoEn: Instant,

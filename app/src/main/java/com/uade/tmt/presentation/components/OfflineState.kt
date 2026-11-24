@@ -30,7 +30,7 @@ fun OfflineState(
 @PreviewLightDark
 @Composable
 private fun OfflineStatePreview() {
-    TMTTheme(dynamicColor = false) {
+    TMTTheme {
         Surface {
             OfflineState(onRetry = {})
         }
