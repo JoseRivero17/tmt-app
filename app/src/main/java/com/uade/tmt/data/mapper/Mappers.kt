@@ -2,6 +2,7 @@ package com.uade.tmt.data.mapper
 
 import com.uade.tmt.data.local.entity.CategoriaTorneoEntity
 import com.uade.tmt.data.local.entity.ClubEntity
+import com.uade.tmt.data.local.entity.JugadorConClub
 import com.uade.tmt.data.local.entity.JugadorEntity
 import com.uade.tmt.data.local.entity.JugadorSeguido
 import com.uade.tmt.data.local.entity.TorneoConCategorias
@@ -69,7 +70,9 @@ fun Jugador.aEntidad(actualizadoEn: Instant) = JugadorEntity(
     actualizadoEn = actualizadoEn,
 )
 
-fun JugadorEntity.aDominio() = Jugador(
+fun JugadorConClub.aDominio() = jugador.aDominio(club)
+
+private fun JugadorEntity.aDominio(datosClub: ClubEntity?) = Jugador(
     codigo = codigo,
     nombre = nombre,
     division = division,
@@ -77,12 +80,12 @@ fun JugadorEntity.aDominio() = Jugador(
     rating = rating,
     variacion = variacion,
     clubCodigo = clubCodigo,
-    club = club,
+    club = datosClub?.nombre ?: club,
     provincia = provincia,
     actualizadoEn = actualizadoEn,
 )
 
-fun JugadorSeguido.aDominio() = Seguido(jugador = jugador.aDominio(), esPropio = esPropio)
+fun JugadorSeguido.aDominio() = Seguido(jugador = jugador.aDominio(club), esPropio = esPropio)
 
 fun Club.aEntidad() = ClubEntity(
     codigo = codigo,
