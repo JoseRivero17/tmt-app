@@ -1,6 +1,16 @@
 package com.uade.tmt.di
 
 import android.content.Context
+import com.uade.tmt.data.local.AppDatabase
+import com.uade.tmt.data.remote.MuestraRemoteDataSource
+import com.uade.tmt.data.remote.TmtRemoteDataSource
+import com.uade.tmt.data.repository.ClubRepositoryImpl
+import com.uade.tmt.data.repository.JugadorRepositoryImpl
+import com.uade.tmt.data.repository.Sincronizador
+import com.uade.tmt.data.repository.TorneoRepositoryImpl
+import com.uade.tmt.domain.repository.ClubRepository
+import com.uade.tmt.domain.repository.JugadorRepository
+import com.uade.tmt.domain.repository.TorneoRepository
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
@@ -13,8 +23,9 @@ import java.util.concurrent.TimeUnit
  * [com.uade.tmt.TMTApplication] y vive mientras viva el proceso.
  */
 interface AppContainer {
-    // Cada RF agrega acá su repositorio, por ejemplo:
-    // val torneoRepository: TorneoRepository
+    val torneoRepository: TorneoRepository
+    val jugadorRepository: JugadorRepository
+    val clubRepository: ClubRepository
 }
 
 /**
@@ -55,6 +66,25 @@ class DefaultAppContainer(
             .client(okHttpClient)
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
+    }
+
+    private val database: AppDatabase by lazy { AppDatabase.crear(context) }
+
+    private val sincronizador: Sincronizador by lazy { Sincronizador(database.syncInfoDao()) }
+
+    /** Datos inventados mientras se completa el scraping: es la única línea a cambiar. */
+    private val remoto: TmtRemoteDataSource by lazy { MuestraRemoteDataSource() }
+
+    override val torneoRepository: TorneoRepository by lazy {
+        TorneoRepositoryImpl(database.torneoDao(), database.syncInfoDao(), remoto, sincronizador)
+    }
+
+    override val jugadorRepository: JugadorRepository by lazy {
+        JugadorRepositoryImpl(database.jugadorDao(), database.syncInfoDao(), remoto, sincronizador)
+    }
+
+    override val clubRepository: ClubRepository by lazy {
+        ClubRepositoryImpl(database.clubDao(), database.syncInfoDao(), remoto, sincronizador)
     }
 
     private companion object {
