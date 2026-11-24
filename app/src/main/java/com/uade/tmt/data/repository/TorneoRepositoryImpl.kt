@@ -34,13 +34,20 @@ class TorneoRepositoryImpl(
     override fun observarActualizacionCalendario(): Flow<Instant?> =
         syncInfo.observar(Recurso.CALENDARIO.clave)
 
+    override fun observarActualizacionTorneo(codigo: Int): Flow<Instant?> =
+        syncInfo.observar(Recurso.torneo(codigo).clave)
+
     override suspend fun sincronizarCalendario(forzar: Boolean): ResultadoSync =
         sincronizador.sincronizar(Recurso.CALENDARIO, forzar) {
             val torneos = remoto.calendario()
             // Una lista vacía es más probable que sea un cambio en el sitio que un circuito sin torneos:
             // se trata como error para no borrar el calendario guardado (RNF04).
             if (torneos.isEmpty()) throw LecturaException("El calendario llegó vacío")
-            dao.reemplazarCalendario(torneos.map { it.aEntidad() }, LocalDate.now(clock))
+            dao.reemplazarCalendario(
+                torneos = torneos.map { it.aEntidad() },
+                categorias = torneos.flatMap { it.categoriasAEntidad() },
+                desde = LocalDate.now(clock),
+            )
         }
 
     override suspend fun sincronizarTorneo(codigo: Int, forzar: Boolean): ResultadoSync =

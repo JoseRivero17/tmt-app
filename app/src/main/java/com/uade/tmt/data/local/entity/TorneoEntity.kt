@@ -13,9 +13,10 @@ data class TorneoEntity(
     val nombre: String,
     val fecha: LocalDate,
     val localidad: String,
-    val club: String?,
+    val clubCodigo: Int?,
     val sede: String?,
     val direccion: String?,
+    val precios: String?,
     val cancelado: Boolean,
     val inscripcionOnline: Boolean,
 )
@@ -47,4 +48,6 @@ data class TorneoConCategorias(
     @Embedded val torneo: TorneoEntity,
     @Relation(parentColumn = "codigo", entityColumn = "torneoCodigo")
     val categorias: List<CategoriaTorneoEntity>,
+    @Relation(parentColumn = "clubCodigo", entityColumn = "codigo")
+    val club: ClubEntity?,
 )

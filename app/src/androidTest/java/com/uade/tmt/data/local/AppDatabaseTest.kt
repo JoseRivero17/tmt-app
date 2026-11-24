@@ -41,26 +41,57 @@ class AppDatabaseTest {
     private fun torneo(codigo: Int, fecha: LocalDate = hoy.plusDays(1)) =
         Torneo(codigo, "Torneo $codigo", fecha, "CABA", inscripcionOnline = true)
 
+    private suspend fun calendario(vararg torneos: Torneo) = db.torneoDao().reemplazarCalendario(
+        torneos = torneos.map { it.aEntidad() },
+        categorias = torneos.flatMap { it.categoriasAEntidad() },
+        desde = hoy,
+    )
+
+    @Test
+    fun elCalendarioGuardaLasCategoriasParaPoderFiltrar() = runBlocking {
+        calendario(torneo(1).copy(categorias = listOf(CategoriaTorneo("7ma", hora = "20:30"))))
+
+        val guardado = db.torneoDao().observarDesde(hoy).first().single().aDominio()
+        assertEquals(listOf("7ma"), guardado.categorias.map { it.division })
+    }
+
+    @Test
+    fun elDetalleConservaLaLocalidadDelCalendario() = runBlocking {
+        calendario(torneo(1))
+        db.torneoDao().guardarDetalle(torneo(1).copy(localidad = "").aEntidad(), emptyList())
+
+        assertEquals("CABA", db.torneoDao().observar(1).first()!!.torneo.localidad)
+    }
+
+    @Test
+    fun elTorneoMuestraElNombreDelClubSiEstaGuardado() = runBlocking {
+        db.clubDao().reemplazarTodos(listOf(Club(9, "Club Nueve").aEntidad()))
+        calendario(torneo(1).copy(clubCodigo = 9), torneo(2).copy(clubCodigo = 8))
+
+        assertEquals("Club Nueve", db.torneoDao().observar(1).first()!!.aDominio().club)
+        assertNull(db.torneoDao().observar(2).first()!!.aDominio().club)
+    }
+
     @Test
     fun actualizarElCalendarioConservaElDetalleYaBajado() = runBlocking {
         val dao = db.torneoDao()
         val detalle = torneo(1).copy(sede = "Sede", categorias = listOf(CategoriaTorneo("5ta", cupos = 24)))
         dao.guardarDetalle(detalle.aEntidad(), detalle.categoriasAEntidad())
 
-        dao.reemplazarCalendario(listOf(torneo(1).copy(cancelado = true).aEntidad()), hoy)
+        calendario(torneo(1).copy(cancelado = true, categorias = listOf(CategoriaTorneo("5ta", hora = "19:00"))))
 
         val guardado = dao.observar(1).first()!!.aDominio()
         assertTrue(guardado.cancelado)
         assertEquals("Sede", guardado.sede)
-        assertEquals(listOf("5ta"), guardado.categorias.map { it.division })
+        assertEquals(listOf(CategoriaTorneo("5ta", hora = "19:00", cupos = 24)), guardado.categorias)
     }
 
     @Test
     fun actualizarElCalendarioQuitaLosFuturosQueYaNoFiguranYOrdenaPorFecha() = runBlocking {
         val dao = db.torneoDao()
-        dao.reemplazarCalendario(listOf(torneo(1), torneo(2)).map { it.aEntidad() }, hoy)
+        calendario(torneo(1), torneo(2))
 
-        dao.reemplazarCalendario(listOf(torneo(3, hoy.plusDays(9)), torneo(2)).map { it.aEntidad() }, hoy)
+        calendario(torneo(3, hoy.plusDays(9)), torneo(2))
 
         assertEquals(listOf(2, 3), dao.observarDesde(hoy).first().map { it.torneo.codigo })
     }
