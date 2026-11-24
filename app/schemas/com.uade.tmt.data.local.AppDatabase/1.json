@@ -1,0 +1,357 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "4fa4f0a7ae266c2266367fc6a9b73ec9",
+    "entities": [
+      {
+        "tableName": "torneos",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER NOT NULL, `nombre` TEXT NOT NULL, `fecha` INTEGER NOT NULL, `localidad` TEXT NOT NULL, `club` TEXT, `sede` TEXT, `direccion` TEXT, `cancelado` INTEGER NOT NULL, `inscripcionOnline` INTEGER NOT NULL, PRIMARY KEY(`codigo`))",
+        "fields": [
+          {
+            "fieldPath": "codigo",
+            "columnName": "codigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nombre",
+            "columnName": "nombre",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fecha",
+            "columnName": "fecha",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localidad",
+            "columnName": "localidad",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "club",
+            "columnName": "club",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "sede",
+            "columnName": "sede",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "direccion",
+            "columnName": "direccion",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "cancelado",
+            "columnName": "cancelado",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "inscripcionOnline",
+            "columnName": "inscripcionOnline",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "codigo"
+          ]
+        }
+      },
+      {
+        "tableName": "categorias_torneo",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`torneoCodigo` INTEGER NOT NULL, `orden` INTEGER NOT NULL, `division` TEXT NOT NULL, `detalle` TEXT, `hora` TEXT, `cupos` INTEGER, PRIMARY KEY(`torneoCodigo`, `orden`), FOREIGN KEY(`torneoCodigo`) REFERENCES `torneos`(`codigo`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "torneoCodigo",
+            "columnName": "torneoCodigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "orden",
+            "columnName": "orden",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "division",
+            "columnName": "division",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "detalle",
+            "columnName": "detalle",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "hora",
+            "columnName": "hora",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "cupos",
+            "columnName": "cupos",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "torneoCodigo",
+            "orden"
+          ]
+        },
+        "foreignKeys": [
+          {
+            "table": "torneos",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "torneoCodigo"
+            ],
+            "referencedColumns": [
+              "codigo"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "jugadores",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER NOT NULL, `nombre` TEXT NOT NULL, `nombreBusqueda` TEXT NOT NULL, `division` TEXT NOT NULL, `puesto` INTEGER, `rating` INTEGER, `variacion` INTEGER, `clubCodigo` INTEGER, `club` TEXT, `provincia` TEXT, `actualizadoEn` INTEGER NOT NULL, PRIMARY KEY(`codigo`))",
+        "fields": [
+          {
+            "fieldPath": "codigo",
+            "columnName": "codigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nombre",
+            "columnName": "nombre",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nombreBusqueda",
+            "columnName": "nombreBusqueda",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "division",
+            "columnName": "division",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "puesto",
+            "columnName": "puesto",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "rating",
+            "columnName": "rating",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "variacion",
+            "columnName": "variacion",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "clubCodigo",
+            "columnName": "clubCodigo",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "club",
+            "columnName": "club",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "provincia",
+            "columnName": "provincia",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "actualizadoEn",
+            "columnName": "actualizadoEn",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "codigo"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_jugadores_division",
+            "unique": false,
+            "columnNames": [
+              "division"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_jugadores_division` ON `${TABLE_NAME}` (`division`)"
+          }
+        ]
+      },
+      {
+        "tableName": "seguidos",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`jugadorCodigo` INTEGER NOT NULL, `esPropio` INTEGER NOT NULL, PRIMARY KEY(`jugadorCodigo`))",
+        "fields": [
+          {
+            "fieldPath": "jugadorCodigo",
+            "columnName": "jugadorCodigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "esPropio",
+            "columnName": "esPropio",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "jugadorCodigo"
+          ]
+        }
+      },
+      {
+        "tableName": "clubes",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`codigo` INTEGER NOT NULL, `nombre` TEXT NOT NULL, `direccion` TEXT, `localidad` TEXT, `telefono` TEXT, `mail` TEXT, `latitud` REAL, `longitud` REAL, PRIMARY KEY(`codigo`))",
+        "fields": [
+          {
+            "fieldPath": "codigo",
+            "columnName": "codigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nombre",
+            "columnName": "nombre",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "direccion",
+            "columnName": "direccion",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "localidad",
+            "columnName": "localidad",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "telefono",
+            "columnName": "telefono",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "mail",
+            "columnName": "mail",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "latitud",
+            "columnName": "latitud",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "longitud",
+            "columnName": "longitud",
+            "affinity": "REAL"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "codigo"
+          ]
+        }
+      },
+      {
+        "tableName": "inscripciones",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`torneoCodigo` INTEGER NOT NULL, `categoria` TEXT NOT NULL, `estado` TEXT NOT NULL, `registradaEn` INTEGER NOT NULL, PRIMARY KEY(`torneoCodigo`, `categoria`))",
+        "fields": [
+          {
+            "fieldPath": "torneoCodigo",
+            "columnName": "torneoCodigo",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "categoria",
+            "columnName": "categoria",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "estado",
+            "columnName": "estado",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "registradaEn",
+            "columnName": "registradaEn",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "torneoCodigo",
+            "categoria"
+          ]
+        }
+      },
+      {
+        "tableName": "sync_info",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recurso` TEXT NOT NULL, `actualizadoEn` INTEGER NOT NULL, PRIMARY KEY(`recurso`))",
+        "fields": [
+          {
+            "fieldPath": "recurso",
+            "columnName": "recurso",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "actualizadoEn",
+            "columnName": "actualizadoEn",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "recurso"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4fa4f0a7ae266c2266367fc6a9b73ec9')"
+    ]
+  }
+}
