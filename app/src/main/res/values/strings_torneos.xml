@@ -1,0 +1,35 @@
+<resources>
+    <!-- RF01: calendario y detalle de torneos -->
+    <string name="torneos_titulo">Torneos</string>
+    <string name="torneos_sin_coincidencias">Ningún torneo coincide con los filtros.</string>
+    <string name="torneos_sin_proximos">No hay próximos torneos publicados.</string>
+    <string name="torneos_filtro_division">División</string>
+    <string name="torneos_filtro_localidad">Localidad</string>
+    <string name="torneos_filtro_fechas">Fechas</string>
+    <string name="torneos_filtro_todas">Todas</string>
+    <string name="torneos_filtro_rango">%1$s – %2$s</string>
+    <string name="torneos_aplicar">Aplicar</string>
+    <string name="torneos_cancelar">Cancelar</string>
+    <string name="torneos_volver">Volver</string>
+    <string name="torneos_estado_cancelado">Cancelado</string>
+    <string name="torneos_estado_inscripcion">Inscripción online</string>
+    <string name="torneos_estado_sin_inscripcion">Sin inscripción online</string>
+    <string name="torneos_aviso_cancelado">Este torneo fue cancelado. No se puede reservar un lugar.</string>
+    <string name="torneos_detalle_club">Club organizador</string>
+    <string name="torneos_detalle_sede">Sede</string>
+    <string name="torneos_detalle_localidad">Localidad</string>
+    <string name="torneos_detalle_divisiones">Divisiones</string>
+    <string name="torneos_detalle_division">%1$s división</string>
+    <string name="torneos_detalle_precios">Valor de la inscripción</string>
+    <string name="torneos_detalle_hora">%1$s hs</string>
+    <plurals name="torneos_detalle_cupos">
+        <item quantity="one">%1$d lugar en total</item>
+        <item quantity="other">%1$d lugares en total</item>
+    </plurals>
+
+    <!-- Motivos de falla al actualizar (RNF02) -->
+    <string name="fallo_sin_conexion">No hay conexión a internet.</string>
+    <string name="fallo_timeout">El sitio está tardando demasiado en responder.</string>
+    <string name="fallo_servidor">El sitio del circuito no está disponible en este momento.</string>
+    <string name="fallo_lectura">No pudimos leer la información del sitio.</string>
+</resources>
