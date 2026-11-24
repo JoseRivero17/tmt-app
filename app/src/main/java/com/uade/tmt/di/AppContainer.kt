@@ -2,7 +2,8 @@ package com.uade.tmt.di
 
 import android.content.Context
 import com.uade.tmt.data.local.AppDatabase
-import com.uade.tmt.data.remote.MuestraRemoteDataSource
+import com.uade.tmt.data.remote.SitioRemoteDataSource
+import com.uade.tmt.data.remote.SitioService
 import com.uade.tmt.data.remote.TmtRemoteDataSource
 import com.uade.tmt.data.repository.ClubRepositoryImpl
 import com.uade.tmt.data.repository.JugadorRepositoryImpl
@@ -72,8 +73,9 @@ class DefaultAppContainer(
 
     private val sincronizador: Sincronizador by lazy { Sincronizador(database.syncInfoDao()) }
 
-    /** Datos inventados mientras se completa el scraping: es la única línea a cambiar. */
-    private val remoto: TmtRemoteDataSource by lazy { MuestraRemoteDataSource() }
+    private val remoto: TmtRemoteDataSource by lazy {
+        SitioRemoteDataSource(retrofit.create(SitioService::class.java))
+    }
 
     override val torneoRepository: TorneoRepository by lazy {
         TorneoRepositoryImpl(database.torneoDao(), database.syncInfoDao(), remoto, sincronizador)
