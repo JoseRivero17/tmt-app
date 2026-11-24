@@ -2,6 +2,7 @@ package com.uade.tmt.di
 
 import android.content.Context
 import com.uade.tmt.data.local.AppDatabase
+import com.uade.tmt.data.remote.ConectividadAndroid
 import com.uade.tmt.data.remote.SitioRemoteDataSource
 import com.uade.tmt.data.remote.SitioService
 import com.uade.tmt.data.remote.TmtRemoteDataSource
@@ -10,6 +11,7 @@ import com.uade.tmt.data.repository.JugadorRepositoryImpl
 import com.uade.tmt.data.repository.Sincronizador
 import com.uade.tmt.data.repository.TorneoRepositoryImpl
 import com.uade.tmt.domain.repository.ClubRepository
+import com.uade.tmt.domain.repository.Conectividad
 import com.uade.tmt.domain.repository.JugadorRepository
 import com.uade.tmt.domain.repository.TorneoRepository
 import okhttp3.OkHttpClient
@@ -27,6 +29,7 @@ interface AppContainer {
     val torneoRepository: TorneoRepository
     val jugadorRepository: JugadorRepository
     val clubRepository: ClubRepository
+    val conectividad: Conectividad
 }
 
 /**
@@ -88,6 +91,8 @@ class DefaultAppContainer(
     override val clubRepository: ClubRepository by lazy {
         ClubRepositoryImpl(database.clubDao(), database.syncInfoDao(), remoto, sincronizador)
     }
+
+    override val conectividad: Conectividad by lazy { ConectividadAndroid(context) }
 
     private companion object {
         const val BASE_URL = "https://tenisdemesaparatodos.com/"
