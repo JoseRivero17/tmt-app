@@ -10,6 +10,7 @@ import com.uade.tmt.data.remote.LecturaException
 import com.uade.tmt.data.remote.TmtRemoteDataSource
 import com.uade.tmt.domain.model.DIVISIONES
 import com.uade.tmt.domain.model.Jugador
+import com.uade.tmt.domain.model.MotivoFallo
 import com.uade.tmt.domain.model.Recurso
 import com.uade.tmt.domain.model.ResultadoSync
 import com.uade.tmt.domain.model.Seguido
@@ -55,13 +56,20 @@ class JugadorRepositoryImpl(
             dao.guardar(jugadores.map { it.aEntidad(ahora) })
         }
 
-    /** De a una división, para no cargar al sitio. Las que siguen vigentes no se vuelven a pedir. */
+    /**
+     * De a una división, para no cargar al sitio. Las que siguen vigentes no se vuelven a pedir.
+     * Si el sitio falla en una, se sigue con las demás; si no hay conexión, no tiene sentido seguir.
+     */
     override suspend fun precargarRanking(): ResultadoSync {
         var resultado: ResultadoSync = ResultadoSync.Vigente
         for (division in DIVISIONES) {
             when (val parcial = sincronizarRanking(division, forzar = false)) {
-                is ResultadoSync.Fallo -> return parcial
-                ResultadoSync.Actualizado -> resultado = parcial
+                is ResultadoSync.Fallo -> {
+                    if (parcial.motivo == MotivoFallo.SIN_CONEXION) return parcial
+                    resultado = parcial
+                }
+
+                ResultadoSync.Actualizado -> if (resultado !is ResultadoSync.Fallo) resultado = parcial
                 ResultadoSync.Vigente -> Unit
             }
         }

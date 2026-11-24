@@ -17,6 +17,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.io.IOException
+import java.net.SocketTimeoutException
 import java.time.Clock
 import java.time.Instant
 import java.time.ZoneOffset
@@ -51,6 +52,19 @@ class PrecargaRankingTest {
     }
 
     @Test
+    fun `si una division tarda demasiado sigue con las demas y despues pide solo esa`() = runBlocking {
+        remoto.fallaEn = "4ta"
+        remoto.falla = SocketTimeoutException()
+        assertEquals(ResultadoSync.Fallo(MotivoFallo.TIMEOUT), repositorio.precargarRanking())
+        assertEquals((DIVISIONES - "4ta").toSet(), dao.guardados.map { it.division }.toSet())
+
+        remoto.fallaEn = null
+        remoto.pedidas.clear()
+        assertEquals(ResultadoSync.Actualizado, repositorio.precargarRanking())
+        assertEquals(listOf("4ta"), remoto.pedidas)
+    }
+
+    @Test
     fun `si todo esta vigente no consulta el sitio`() = runBlocking {
         repositorio.precargarRanking()
         remoto.pedidas.clear()
@@ -63,9 +77,10 @@ class PrecargaRankingTest {
 private class RemotoFake : TmtRemoteDataSource by MuestraRemoteDataSource() {
     val pedidas = mutableListOf<String>()
     var fallaEn: String? = null
+    var falla: Exception = IOException()
 
     override suspend fun ranking(division: String): List<Jugador> {
-        if (division == fallaEn) throw IOException()
+        if (division == fallaEn) throw falla
         pedidas += division
         return listOf(Jugador(division.hashCode(), "Jugador", division, 1, 1000))
     }

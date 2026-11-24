@@ -28,7 +28,7 @@ interface JugadorRepository {
 
     /**
      * Baja los primeros 100 de cada división, para poder buscar sin conexión. Tarda cerca de un
-     * minuto: se guarda división por división y, si se corta, la próxima vez sigue por donde quedó.
+     * minuto o dos: se guarda división por división y la próxima vez solo se piden las que faltaron.
      */
     suspend fun precargarRanking(): ResultadoSync
 }

@@ -11,8 +11,8 @@ import com.uade.tmt.TMTApplication
 /**
  * Deja jugadores de todas las divisiones guardados para poder buscar sin conexión (RF03).
  *
- * Solo con la app a la vista: al pasar a segundo plano se cancela y al volver sigue por la división
- * que faltaba (RNF12). Cada división se pide como máximo una vez por día (RNF05).
+ * Solo con la app a la vista: al pasar a segundo plano se cancela y al volver pide las divisiones
+ * que faltaban (RNF12). Cada división se pide como máximo una vez por día (RNF05).
  */
 @Composable
 internal fun PrecargaJugadores() {

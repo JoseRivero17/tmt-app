@@ -14,6 +14,7 @@ import com.uade.tmt.domain.repository.ClubRepository
 import com.uade.tmt.domain.repository.Conectividad
 import com.uade.tmt.domain.repository.JugadorRepository
 import com.uade.tmt.domain.repository.TorneoRepository
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
@@ -45,7 +46,7 @@ class DefaultAppContainer(
     /**
      * Cliente HTTP compartido por toda la app.
      *
-     * - Timeouts de 15 s para conexión, lectura y escritura (RNF03).
+     * - Timeouts de 15 s para conexión, lectura y escritura (RNF03), salvo la lectura del ranking.
      * - Sin HttpLoggingInterceptor: la app maneja credenciales y no deben quedar
      *   escritas en los logs (RNF06).
      */
@@ -54,7 +55,18 @@ class DefaultAppContainer(
             .connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
             .readTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
             .writeTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            .addInterceptor(esperarMasElRanking)
             .build()
+    }
+
+    /**
+     * Excepción a RNF03: el sitio llega a tardar más de 20 s en armar el ranking de una división.
+     * Se carga de fondo y mientras tanto se ve lo guardado, así que esperar no frena ninguna pantalla.
+     */
+    private val esperarMasElRanking = Interceptor { chain ->
+        val esRanking = chain.request().url.encodedPath.endsWith("/ranking.asp")
+        val cadena = if (esRanking) chain.withReadTimeout(TIMEOUT_RANKING_SECONDS, TimeUnit.SECONDS) else chain
+        cadena.proceed(chain.request())
     }
 
     /**
@@ -97,5 +109,6 @@ class DefaultAppContainer(
     private companion object {
         const val BASE_URL = "https://tenisdemesaparatodos.com/"
         const val TIMEOUT_SECONDS = 15L
+        const val TIMEOUT_RANKING_SECONDS = 45
     }
 }
