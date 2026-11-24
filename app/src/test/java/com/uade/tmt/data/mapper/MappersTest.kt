@@ -1,5 +1,6 @@
 package com.uade.tmt.data.mapper
 
+import com.uade.tmt.data.local.entity.ClubEntity
 import com.uade.tmt.data.local.entity.TorneoConCategorias
 import com.uade.tmt.domain.model.CategoriaTorneo
 import com.uade.tmt.domain.model.Jugador
@@ -25,16 +26,19 @@ class MappersTest {
             nombre = "Copa",
             fecha = LocalDate.of(2026, 11, 27),
             localidad = "CABA",
+            clubCodigo = 9,
             club = "Club",
             sede = "Sede",
             direccion = "Calle 1",
+            precios = "$1000",
             inscripcionOnline = true,
             categorias = listOf(
                 CategoriaTorneo("7ma", "3 sets", "20:30", 18),
                 CategoriaTorneo("8va", null, "21:00", null),
             ),
         )
-        val guardado = TorneoConCategorias(torneo.aEntidad(), torneo.categoriasAEntidad().reversed())
+        val club = ClubEntity(9, "Club", null, null, null, null, null, null)
+        val guardado = TorneoConCategorias(torneo.aEntidad(), torneo.categoriasAEntidad().reversed(), club)
 
         assertEquals(torneo, guardado.aDominio())
     }

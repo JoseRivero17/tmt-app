@@ -15,6 +15,8 @@ interface TorneoRepository {
     /** Fecha de la última actualización del calendario, o null si nunca se sincronizó (RNF01). */
     fun observarActualizacionCalendario(): Flow<Instant?>
 
+    fun observarActualizacionTorneo(codigo: Int): Flow<Instant?>
+
     suspend fun sincronizarCalendario(forzar: Boolean = false): ResultadoSync
 
     suspend fun sincronizarTorneo(codigo: Int, forzar: Boolean = false): ResultadoSync

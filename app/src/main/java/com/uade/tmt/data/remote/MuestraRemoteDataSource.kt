@@ -28,7 +28,7 @@ class MuestraRemoteDataSource(private val clock: Clock = Clock.systemDefaultZone
         val base = calendario().firstOrNull { it.codigo == codigo }
             ?: throw LecturaException("No existe el torneo $codigo")
         return base.copy(
-            club = "Club de Muestra",
+            clubCodigo = 1,
             sede = "Club de Muestra",
             direccion = "Calle Inventada 123",
             categorias = listOf(
