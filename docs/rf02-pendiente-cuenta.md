@@ -19,8 +19,8 @@ categorías de un torneo. Quedaron anonimizadas en `loginExitoso.html` e `inscri
 | Cerrar sesión en el sitio | Hecho: `salir.asp`. |
 | Categorías, horarios y motivo de las no habilitadas | Hecho: `InscripcionParser.opciones`. |
 | Mensaje de clave incorrecta | Falta `loginClaveIncorrecta.html` (hoy cualquier otro mensaje es `CredencialesInvalidas`). |
-| Envío de la inscripción | Falta. "Inscribirme" abre un popup, `jugadores_inscripcionesForm.asp?index=<fila>` (500×500), con el formulario real. No se abrió porque no se sabe si abrirlo ya reserva. |
-| Respuesta al envío | Falta: requiere una inscripción real. |
+| Envío de la inscripción | Visto sin enviarlo. "Inscribirme" abre `jugadores_inscripcionesForm.asp?index=<fila>`: copia los campos ocultos de la fila y pide dos casillas (compartir datos con el organizador y deslinde de responsabilidad). El POST va a `jugadores_inscripciones_paso2.asp` con esos campos más `consentimiento=1`, `chkResp=on` y `chkDDJJ=on`. La app arma esos campos (`InscripcionParser.camposEnvio`), pero **no los envía**: con `enviarAlSitio = false` da la inscripción por reservada y la pantalla aclara que fue simulada. |
+| Respuesta al envío | Falta: requiere una inscripción real. Con ella, implementar `InscripcionParser.resultadoReserva` y recién ahí pasar `enviarAlSitio` a `true`. |
 
 ## 1. Páginas a guardar
 
