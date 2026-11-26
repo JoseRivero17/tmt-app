@@ -20,6 +20,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // RF02: false usa el acceso falso (FakeAccesoRemoteDataSource); true, el sitio real.
+        buildConfigField("boolean", "SITIO_REAL", "false")
     }
 
     buildTypes {
@@ -36,6 +39,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
