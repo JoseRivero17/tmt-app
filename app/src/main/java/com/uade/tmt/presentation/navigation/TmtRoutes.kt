@@ -21,3 +21,10 @@ data object Clubes
 
 @Serializable
 data object Perfil
+
+/** Pantallas dentro de la sección Jugadores (RF03). */
+@Serializable
+data object RankingLista
+
+@Serializable
+data class JugadorFicha(val codigo: Int)

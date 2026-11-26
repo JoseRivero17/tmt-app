@@ -12,4 +12,22 @@
     </plurals>
     <string name="jugadores_puesto">%1$d°</string>
     <string name="jugadores_rating">%1$d pts</string>
+    <string name="ficha_titulo">Jugador</string>
+    <string name="ficha_volver">Volver</string>
+    <string name="ficha_codigo">Código %1$d</string>
+    <string name="ficha_division">División</string>
+    <string name="ficha_puesto">Puesto</string>
+    <string name="ficha_rating">Rating</string>
+    <string name="ficha_club">Club</string>
+    <string name="ficha_sin_dato">—</string>
+    <string name="ficha_seguir">Seguir</string>
+    <string name="ficha_dejar_de_seguir">Dejar de seguir</string>
+    <string name="ficha_es_propio">Este soy yo</string>
+    <string name="ficha_no_es_propio">No soy yo</string>
+    <string name="ficha_tu_perfil">Tu perfil</string>
+    <string name="ficha_no_encontrado">No encontramos a este jugador.</string>
+    <string name="ficha_cambiar_perfil_titulo">¿Cambiar tu perfil?</string>
+    <string name="ficha_cambiar_perfil_texto">Ahora tu perfil es %1$s. ¿Querés que pase a ser %2$s?</string>
+    <string name="ficha_cambiar_perfil_si">Cambiar</string>
+    <string name="ficha_cambiar_perfil_no">Cancelar</string>
 </resources>
