@@ -9,6 +9,7 @@ import com.uade.tmt.TMTApplication
 import com.uade.tmt.domain.model.DIVISIONES
 import com.uade.tmt.domain.model.Jugador
 import com.uade.tmt.domain.model.MotivoFallo
+import com.uade.tmt.domain.model.Seguido
 import com.uade.tmt.domain.repository.Conectividad
 import com.uade.tmt.domain.repository.JugadorRepository
 import com.uade.tmt.presentation.EstadoSync
@@ -27,10 +28,15 @@ import java.time.Instant
 /** La búsqueda arranca recién con esta cantidad de letras (RF03). */
 const val MIN_BUSQUEDA = 3
 
+enum class PestanaJugadores { RANKING, SEGUIDOS }
+
 data class RankingUiState(
+    val pestana: PestanaJugadores = PestanaJugadores.RANKING,
     val division: String = DIVISIONES.first(),
     val busqueda: String = "",
     val jugadores: List<Jugador> = emptyList(),
+    /** Jugadores que sigue el usuario; el perfil propio va primero. Salen de lo guardado. */
+    val seguidos: List<Seguido> = emptyList(),
     val actualizadoEn: Instant? = null,
     val actualizando: Boolean = false,
     val fallo: MotivoFallo? = null,
@@ -39,13 +45,14 @@ data class RankingUiState(
     val buscando: Boolean get() = busqueda.trim().length >= MIN_BUSQUEDA
 }
 
-/** RF03: ranking por división y búsqueda de jugadores. */
+/** RF03: ranking por división, búsqueda de jugadores y seguidos. */
 @OptIn(ExperimentalCoroutinesApi::class)
 class RankingViewModel(
     private val repositorio: JugadorRepository,
     conectividad: Conectividad,
 ) : ViewModel() {
 
+    private val pestana = MutableStateFlow(PestanaJugadores.RANKING)
     private val division = MutableStateFlow(DIVISIONES.first())
     private val busqueda = MutableStateFlow("")
     private val sync = MutableStateFlow(EstadoSync())
@@ -63,22 +70,28 @@ class RankingViewModel(
         division.flatMapLatest { repositorio.observarActualizacionRanking(it) }
 
     val uiState: StateFlow<RankingUiState> = combine(
-        combine(division, busqueda, ::Pair),
+        combine(pestana, division, busqueda, ::Triple),
         jugadores,
+        repositorio.observarSeguidos(),
         actualizadoEn,
-        sync,
-        conectado,
-    ) { (d, b), lista, actualizado, s, con ->
+        combine(sync, conectado, ::Pair),
+    ) { (p, d, b), lista, seguidos, actualizado, (s, con) ->
         RankingUiState(
+            pestana = p,
             division = d,
             busqueda = b,
             jugadores = lista,
+            seguidos = seguidos,
             actualizadoEn = actualizado,
             actualizando = s.enCurso,
             fallo = s.fallo.takeIf { it != MotivoFallo.SIN_CONEXION },
             sinConexion = !con || s.fallo == MotivoFallo.SIN_CONEXION,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), RankingUiState())
+
+    fun elegirPestana(nueva: PestanaJugadores) {
+        pestana.value = nueva
+    }
 
     fun buscar(texto: String) {
         busqueda.value = texto
@@ -95,6 +108,25 @@ class RankingViewModel(
         sync.value = EstadoSync(enCurso = true)
         viewModelScope.launch {
             sync.value = repositorio.sincronizarRanking(division.value, forzar).aEstado()
+        }
+    }
+
+    /** Actualiza las divisiones de los jugadores seguidos. */
+    fun actualizarSeguidos() {
+        if (sync.value.enCurso) return
+        val divisiones = uiState.value.seguidos.map { it.jugador.division }.distinct()
+        if (divisiones.isEmpty()) return
+        sync.value = EstadoSync(enCurso = true)
+        viewModelScope.launch {
+            var resultado = EstadoSync()
+            for (d in divisiones) {
+                val intento = repositorio.sincronizarRanking(d, forzar = true).aEstado()
+                if (intento.fallo != null) {
+                    resultado = intento
+                    break
+                }
+            }
+            sync.value = resultado
         }
     }
 

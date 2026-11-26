@@ -30,4 +30,9 @@
     <string name="ficha_cambiar_perfil_texto">Ahora tu perfil es %1$s. ¿Querés que pase a ser %2$s?</string>
     <string name="ficha_cambiar_perfil_si">Cambiar</string>
     <string name="ficha_cambiar_perfil_no">Cancelar</string>
+    <string name="jugadores_tab_ranking">Ranking</string>
+    <string name="jugadores_tab_seguidos">Seguidos (%1$d)</string>
+    <string name="jugadores_sin_seguidos">Todavía no seguís a ningún jugador. Entrá a la ficha de uno y tocá Seguir.</string>
+    <string name="jugadores_formato_fecha">dd/MM/yyyy HH:mm</string>
+    <string name="jugadores_actualizado">Actualizado el %1$s</string>
 </resources>

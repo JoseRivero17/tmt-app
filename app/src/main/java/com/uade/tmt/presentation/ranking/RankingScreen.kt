@@ -20,12 +20,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -43,6 +46,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.uade.tmt.R
 import com.uade.tmt.domain.model.DIVISIONES
 import com.uade.tmt.domain.model.Jugador
+import com.uade.tmt.domain.model.Seguido
 import com.uade.tmt.presentation.components.EmptyState
 import com.uade.tmt.presentation.components.ErrorState
 import com.uade.tmt.presentation.components.FalloBanner
@@ -53,6 +57,8 @@ import com.uade.tmt.presentation.components.StateMessageLayout
 import com.uade.tmt.presentation.mensaje
 import com.uade.tmt.presentation.theme.TMTTheme
 import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 /** Pestaña Jugadores (RF03): ranking por división y búsqueda. */
 @Composable
@@ -68,17 +74,108 @@ fun RankingScreen(
 
     RankingContent(
         estado = estado,
+        onElegirPestana = viewModel::elegirPestana,
         onBuscar = viewModel::buscar,
         onElegirDivision = viewModel::elegirDivision,
-        onActualizar = { viewModel.actualizar(forzar = true) },
+        onActualizar = {
+            if (estado.pestana == PestanaJugadores.SEGUIDOS) {
+                viewModel.actualizarSeguidos()
+            } else {
+                viewModel.actualizar(forzar = true)
+            }
+        },
         onJugadorClick = onJugadorClick,
         modifier = modifier,
     )
 }
 
+/** Pestañas Ranking / Seguidos. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RankingContent(
+    estado: RankingUiState,
+    onElegirPestana: (PestanaJugadores) -> Unit,
+    onBuscar: (String) -> Unit,
+    onElegirDivision: (String) -> Unit,
+    onActualizar: () -> Unit,
+    onJugadorClick: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier.fillMaxSize()) {
+        PrimaryTabRow(selectedTabIndex = estado.pestana.ordinal) {
+            Tab(
+                selected = estado.pestana == PestanaJugadores.RANKING,
+                onClick = { onElegirPestana(PestanaJugadores.RANKING) },
+                text = { Text(stringResource(R.string.jugadores_tab_ranking)) },
+            )
+            Tab(
+                selected = estado.pestana == PestanaJugadores.SEGUIDOS,
+                onClick = { onElegirPestana(PestanaJugadores.SEGUIDOS) },
+                text = { Text(stringResource(R.string.jugadores_tab_seguidos, estado.seguidos.size)) },
+            )
+        }
+        when (estado.pestana) {
+            PestanaJugadores.RANKING -> PestanaRanking(
+                estado = estado,
+                onBuscar = onBuscar,
+                onElegirDivision = onElegirDivision,
+                onActualizar = onActualizar,
+                onJugadorClick = onJugadorClick,
+            )
+            PestanaJugadores.SEGUIDOS -> PestanaSeguidos(
+                estado = estado,
+                onActualizar = onActualizar,
+                onJugadorClick = onJugadorClick,
+            )
+        }
+    }
+}
+
+/** Seguidos y perfil propio: salen de lo guardado, así que se ven sin conexión (RF03). */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun PestanaSeguidos(
+    estado: RankingUiState,
+    onActualizar: () -> Unit,
+    onJugadorClick: (Int) -> Unit,
+) {
+    val seguidos = estado.seguidos
+    if (seguidos.isEmpty()) {
+        EmptyState(message = stringResource(R.string.jugadores_sin_seguidos))
+        return
+    }
+    Column(modifier = Modifier.fillMaxSize()) {
+        // La fecha más reciente entre los seguidos, con el aviso si no hay conexión.
+        seguidos.mapNotNull { it.jugador.actualizadoEn }.maxOrNull()?.let {
+            LastUpdatedBanner(lastUpdatedMillis = it.toEpochMilli(), isOffline = estado.sinConexion)
+        }
+        val fallo = estado.fallo
+        if (fallo != null) {
+            FalloBanner(motivo = fallo, onRetry = onActualizar)
+        }
+        PullToRefreshBox(
+            isRefreshing = estado.actualizando,
+            onRefresh = onActualizar,
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                items(seguidos, key = { it.jugador.codigo }) { seguido ->
+                    FilaJugador(
+                        jugador = seguido.jugador,
+                        onClick = { onJugadorClick(seguido.jugador.codigo) },
+                        etiqueta = if (seguido.esPropio) stringResource(R.string.ficha_tu_perfil) else null,
+                        mostrarFecha = true,
+                    )
+                    HorizontalDivider()
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun PestanaRanking(
     estado: RankingUiState,
     onBuscar: (String) -> Unit,
     onElegirDivision: (String) -> Unit,
@@ -194,7 +291,12 @@ private fun EncabezadoResultados(cantidad: Int, texto: String) {
 }
 
 @Composable
-private fun FilaJugador(jugador: Jugador, onClick: () -> Unit) {
+private fun FilaJugador(
+    jugador: Jugador,
+    onClick: () -> Unit,
+    etiqueta: String? = null,
+    mostrarFecha: Boolean = false,
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -211,12 +313,31 @@ private fun FilaJugador(jugador: Jugador, onClick: () -> Unit) {
             modifier = Modifier.widthIn(min = 40.dp),
         )
         Column(modifier = Modifier.weight(1f)) {
+            if (etiqueta != null) {
+                Text(
+                    text = etiqueta,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+            }
             Text(text = jugador.nombre, style = MaterialTheme.typography.bodyLarge)
             Text(
                 text = listOfNotNull(jugador.division, jugador.club).joinToString(" · "),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+            val actualizado = jugador.actualizadoEn
+            if (mostrarFecha && actualizado != null) {
+                val patron = stringResource(R.string.jugadores_formato_fecha)
+                val fecha = remember(actualizado, patron) {
+                    DateTimeFormatter.ofPattern(patron).format(actualizado.atZone(ZoneId.systemDefault()))
+                }
+                Text(
+                    text = stringResource(R.string.jugadores_actualizado, fecha),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
         }
         jugador.rating?.let {
             Text(
@@ -243,6 +364,7 @@ private fun RankingPreview() {
                     jugadores = JugadoresDePrueba,
                     actualizadoEn = Instant.ofEpochMilli(1_763_900_000_000L),
                 ),
+                onElegirPestana = {},
                 onBuscar = {},
                 onElegirDivision = {},
                 onActualizar = {},
@@ -259,6 +381,29 @@ private fun BusquedaPreview() {
         Surface {
             RankingContent(
                 estado = RankingUiState(busqueda = "mue", jugadores = JugadoresDePrueba.take(1)),
+                onElegirPestana = {},
+                onBuscar = {},
+                onElegirDivision = {},
+                onActualizar = {},
+                onJugadorClick = {},
+            )
+        }
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun SeguidosPreview() {
+    TMTTheme {
+        Surface {
+            RankingContent(
+                estado = RankingUiState(
+                    pestana = PestanaJugadores.SEGUIDOS,
+                    seguidos = JugadoresDePrueba.mapIndexed { i, jugador ->
+                        Seguido(jugador.copy(actualizadoEn = Instant.ofEpochMilli(1_763_900_000_000L)), esPropio = i == 0)
+                    },
+                ),
+                onElegirPestana = {},
                 onBuscar = {},
                 onElegirDivision = {},
                 onActualizar = {},
