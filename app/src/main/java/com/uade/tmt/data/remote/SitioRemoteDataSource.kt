@@ -1,6 +1,8 @@
 package com.uade.tmt.data.remote
 
 import com.uade.tmt.data.remote.parser.CalendarioParser
+import com.uade.tmt.data.remote.parser.FICHAS_EXCLUIDAS
+import com.uade.tmt.data.remote.parser.FichaParser
 import com.uade.tmt.data.remote.parser.RankingParser
 import com.uade.tmt.data.remote.parser.TorneoParser
 import com.uade.tmt.domain.model.Jugador
@@ -19,6 +21,11 @@ class SitioRemoteDataSource(
 
     override suspend fun ranking(division: String): List<Jugador> =
         RankingParser.parsear(sitio.ranking(division))
+
+    override suspend fun ficha(codigo: Int): Jugador {
+        if (codigo in FICHAS_EXCLUIDAS) throw LecturaException("El robots.txt del sitio excluye la ficha $codigo")
+        return FichaParser.parsear(codigo, sitio.ficha(codigo))
+    }
 
     override suspend fun torneo(codigo: Int): Torneo = TorneoParser.parsear(codigo, sitio.torneo(codigo))
 }

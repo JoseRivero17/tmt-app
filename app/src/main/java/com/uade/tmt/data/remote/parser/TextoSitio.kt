@@ -6,6 +6,9 @@ import org.jsoup.nodes.TextNode
 import java.time.DateTimeException
 import java.time.LocalDate
 
+/** El robots.txt del sitio pide no acceder a estas fichas: no se piden ni se guardan. */
+internal val FICHAS_EXCLUIDAS = setOf(5341, 5149)
+
 private val FECHA = Regex("""(\d{1,2}) de (\p{L}+) de (\d{4})""", RegexOption.IGNORE_CASE)
 private val DIVISION = Regex("""(\d+(?:ra|da|ta|ma|va|na)) division""")
 private val CANCELADO = Regex("cancelad|suspendid")

@@ -14,6 +14,9 @@ interface TmtRemoteDataSource {
     suspend fun calendario(): List<Torneo>
     suspend fun torneo(codigo: Int): Torneo
     suspend fun ranking(division: String): List<Jugador>
+
+    /** Ficha de un jugador, esté o no entre los primeros 100 de su división. Sin puesto. */
+    suspend fun ficha(codigo: Int): Jugador
     suspend fun clubes(): List<Club>
 }
 
