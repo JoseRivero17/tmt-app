@@ -118,7 +118,7 @@ private fun TorneoDetalleContent(
                     onRefresh = onActualizar,
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    DatosTorneo(estado.torneo, onInscribirme)
+                    DatosTorneo(estado.torneo, estado.sinConexion, onInscribirme)
                 }
             }
         }
@@ -126,7 +126,7 @@ private fun TorneoDetalleContent(
 }
 
 @Composable
-private fun DatosTorneo(torneo: Torneo, onInscribirme: (Int) -> Unit) {
+private fun DatosTorneo(torneo: Torneo, sinConexion: Boolean, onInscribirme: (Int) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -151,12 +151,21 @@ private fun DatosTorneo(torneo: Torneo, onInscribirme: (Int) -> Unit) {
         }
 
         if (torneo.admiteReserva) {
+            // RF02, criterio 3: sin conexión no se reserva ni se encola; se explica por qué.
             Button(
                 onClick = { onInscribirme(torneo.codigo) },
+                enabled = !sinConexion,
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(min = 48.dp),
             ) { Text(stringResource(R.string.torneos_inscribirme)) }
+            if (sinConexion) {
+                Text(
+                    text = stringResource(R.string.torneos_inscripcion_sin_conexion),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
         }
 
         if (torneo.cancelado) {

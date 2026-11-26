@@ -8,10 +8,12 @@ con consulta sin conexión.
 
 ## Integrantes
 
-| Integrante | Rol |
-|---|---|
-| José Rivero | _completar_ |
-| _completar_ | _completar_ |
+| Integrante | Rol | Responsabilidades |
+|---|---|---|
+| Lucas Lemes | UI / UX / Frontend | Diseño en Figma, interfaz y sus estados, requisitos no funcionales |
+| Mateo Giarrocco | Casos de uso / Frontend / Testing | Modelos de dominio, casos de uso e interfaces de repositorio |
+| Delfina Gómez Puegher | Persistencia / Offline first | Base local con Room, actualización de datos y preferencias |
+| José Rivero | Networking / Scraping / Testing | Fuente remota, manejo de errores de red y plan de pruebas |
 
 ## Stack
 
