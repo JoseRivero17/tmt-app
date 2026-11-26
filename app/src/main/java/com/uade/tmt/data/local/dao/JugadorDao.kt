@@ -21,6 +21,9 @@ interface JugadorDao {
     @Query("SELECT * FROM jugadores WHERE codigo = :codigo")
     fun observar(codigo: Int): Flow<JugadorConClub?>
 
+    @Query("SELECT * FROM jugadores WHERE codigo = :codigo")
+    suspend fun buscarPorCodigo(codigo: Int): JugadorEntity?
+
     /** [texto] llega ya normalizado. */
     @Transaction
     @Query(
@@ -51,4 +54,11 @@ interface JugadorDao {
 
     @Query("DELETE FROM seguidos WHERE jugadorCodigo = :codigo")
     suspend fun dejarDeSeguir(codigo: Int)
+
+    /** Código del perfil propio aunque su ficha todavía no se haya bajado. */
+    @Query("SELECT jugadorCodigo FROM seguidos WHERE esPropio = 1 LIMIT 1")
+    fun observarCodigoPropio(): Flow<Int?>
+
+    @Query("DELETE FROM seguidos WHERE esPropio = 1")
+    suspend fun quitarPropio()
 }

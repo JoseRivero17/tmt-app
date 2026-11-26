@@ -25,21 +25,21 @@ class SesionRepositoryImplTest {
 
     @Test
     fun `el jugador de demostracion inicia sesion`() = runBlocking {
-        val resultado = repositorio.login("12345", "demo")
+        val resultado = repositorio.login("99999", "demo")
 
-        val esperada = SesionJugador("12345", FakeAccesoRemoteDataSource.NOMBRE_DEMO)
+        val esperada = SesionJugador("99999", FakeAccesoRemoteDataSource.NOMBRE_DEMO)
         assertEquals(ResultadoLogin.Ok(esperada), resultado)
         assertEquals(esperada, repositorio.sesion.value)
     }
 
     @Test
     fun `el codigo se toma sin espacios alrededor`() = runBlocking {
-        assertTrue(repositorio.login(" 12345 ", "demo") is ResultadoLogin.Ok)
+        assertTrue(repositorio.login(" 99999 ", "demo") is ResultadoLogin.Ok)
     }
 
     @Test
     fun `otra combinacion son credenciales invalidas y no hay sesion`() = runBlocking {
-        assertEquals(ResultadoLogin.CredencialesInvalidas, repositorio.login("12345", "otra"))
+        assertEquals(ResultadoLogin.CredencialesInvalidas, repositorio.login("99999", "otra"))
         assertEquals(ResultadoLogin.CredencialesInvalidas, repositorio.login("54321", "demo"))
         assertNull(repositorio.sesion.value)
     }
@@ -51,7 +51,7 @@ class SesionRepositoryImplTest {
 
         assertEquals(ResultadoLogin.DatosIncompletos, repo.login("", "demo"))
         assertEquals(ResultadoLogin.DatosIncompletos, repo.login("   ", "demo"))
-        assertEquals(ResultadoLogin.DatosIncompletos, repo.login("12345", ""))
+        assertEquals(ResultadoLogin.DatosIncompletos, repo.login("99999", ""))
         assertEquals(0, remoto.ingresos)
     }
 
@@ -59,7 +59,7 @@ class SesionRepositoryImplTest {
     fun `logout borra la sesion y las cookies`() = runBlocking {
         val remoto = RemotoFalso { EstadoAcceso.Exito(nombre = null) }
         val repo = SesionRepositoryImpl(remoto)
-        repo.login("12345", "demo")
+        repo.login("99999", "demo")
 
         repo.logout()
 
@@ -69,9 +69,9 @@ class SesionRepositoryImplTest {
 
     @Test
     fun `un login fallido despues de uno exitoso deja sin sesion`() = runBlocking {
-        repositorio.login("12345", "demo")
+        repositorio.login("99999", "demo")
 
-        repositorio.login("12345", "otra")
+        repositorio.login("99999", "otra")
 
         assertNull(repositorio.sesion.value)
     }
@@ -80,7 +80,7 @@ class SesionRepositoryImplTest {
     fun `sin red es sin conexion`() = runBlocking {
         val repo = SesionRepositoryImpl(RemotoFalso { throw UnknownHostException() })
 
-        assertEquals(ResultadoLogin.SinConexion, repo.login("12345", "demo"))
+        assertEquals(ResultadoLogin.SinConexion, repo.login("99999", "demo"))
         assertNull(repo.sesion.value)
     }
 
@@ -88,14 +88,14 @@ class SesionRepositoryImplTest {
     fun `una respuesta ilegible es error del sitio`() = runBlocking {
         val repo = SesionRepositoryImpl(RemotoFalso { throw LecturaException("ilegible") })
 
-        assertEquals(ResultadoLogin.ErrorSitio, repo.login("12345", "demo"))
+        assertEquals(ResultadoLogin.ErrorSitio, repo.login("99999", "demo"))
     }
 
     @Test
     fun `una excepcion inesperada no crashea`() = runBlocking {
         val repo = SesionRepositoryImpl(RemotoFalso { throw IllegalStateException() })
 
-        assertEquals(ResultadoLogin.ErrorSitio, repo.login("12345", "demo"))
+        assertEquals(ResultadoLogin.ErrorSitio, repo.login("99999", "demo"))
     }
 
     @Test
@@ -103,7 +103,7 @@ class SesionRepositoryImplTest {
         for (estado in listOf(EstadoAcceso.SesionRequerida, EstadoAcceso.SinSesion)) {
             val repo = SesionRepositoryImpl(RemotoFalso { estado })
 
-            assertEquals(ResultadoLogin.ErrorSitio, repo.login("12345", "demo"))
+            assertEquals(ResultadoLogin.ErrorSitio, repo.login("99999", "demo"))
             assertNull(repo.sesion.value)
         }
     }
@@ -114,14 +114,14 @@ class SesionRepositoryImplTest {
             .replace("columna_barra2", "otra_barra")
         val repo = SesionRepositoryImpl(sitioQueResponde(alterado))
 
-        assertEquals(ResultadoLogin.ErrorSitio, repo.login("12345", "demo"))
+        assertEquals(ResultadoLogin.ErrorSitio, repo.login("99999", "demo"))
     }
 
     @Test
     fun `con la fuente real, el aviso de datos incompletos llega al dominio`() = runBlocking {
         val repo = SesionRepositoryImpl(sitioQueResponde(html("buscarJugador.html")))
 
-        assertEquals(ResultadoLogin.DatosIncompletos, repo.login("12345", "demo"))
+        assertEquals(ResultadoLogin.DatosIncompletos, repo.login("99999", "demo"))
     }
 
     private fun sitioQueResponde(respuesta: String) = SitioAccesoRemoteDataSource(

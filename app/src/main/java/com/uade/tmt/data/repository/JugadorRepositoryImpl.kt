@@ -16,6 +16,7 @@ import com.uade.tmt.domain.model.ResultadoSync
 import com.uade.tmt.domain.model.Seguido
 import com.uade.tmt.domain.repository.JugadorRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.time.Clock
 import java.time.Instant
@@ -43,10 +44,43 @@ class JugadorRepositoryImpl(
     override fun observarSeguidos(): Flow<List<Seguido>> =
         dao.observarSeguidos().map { lista -> lista.map { it.aDominio() } }
 
-    override suspend fun seguir(codigo: Int, esPropio: Boolean) =
-        dao.seguir(SeguidoEntity(codigo, esPropio))
+    override suspend fun seguir(codigo: Int) = dao.seguir(SeguidoEntity(codigo, esPropio = false))
 
     override suspend fun dejarDeSeguir(codigo: Int) = dao.dejarDeSeguir(codigo)
+
+    override fun observarCodigoPropio(): Flow<Int?> = dao.observarCodigoPropio()
+
+    override suspend fun establecerPerfilPropio(codigo: Int) {
+        dao.quitarPropio()
+        dao.seguir(SeguidoEntity(codigo, esPropio = true))
+    }
+
+    override suspend fun quitarPerfilPropio() = dao.quitarPropio()
+
+    /**
+     * Si el jugador ya estaba guardado por el ranking, se conservan su nombre (que el ranking trae
+     * como "Apellido, Nombre"), su provincia y su puesto en la división: la ficha no los tiene.
+     */
+    override suspend fun sincronizarFicha(codigo: Int, forzar: Boolean): ResultadoSync =
+        sincronizador.sincronizar(Recurso.ficha(codigo), forzar) {
+            val ficha = remoto.ficha(codigo)
+            val anterior = dao.buscarPorCodigo(codigo)
+            val combinado = if (anterior == null) {
+                ficha
+            } else {
+                ficha.copy(
+                    nombre = anterior.nombre,
+                    provincia = anterior.provincia,
+                    puesto = anterior.puesto.takeIf { anterior.division == ficha.division },
+                )
+            }
+            dao.guardar(listOf(combinado.aEntidad(clock.instant())))
+        }
+
+    override suspend fun sincronizarPerfilPropio(forzar: Boolean): ResultadoSync {
+        val codigo = dao.observarCodigoPropio().first() ?: return ResultadoSync.Vigente
+        return sincronizarFicha(codigo, forzar)
+    }
 
     override suspend fun sincronizarRanking(division: String, forzar: Boolean): ResultadoSync =
         sincronizador.sincronizar(Recurso.ranking(division), forzar) {

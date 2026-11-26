@@ -16,13 +16,10 @@ object RankingParser {
     private val DIVISION = Regex("""icono_puesto_(\w+)\.""")
     private val CODIGO = Regex("""codigo=(\d+)""")
 
-    /** El robots.txt del sitio pide no acceder a estas fichas: no se guardan. */
-    private val EXCLUIDOS = setOf(5341, 5149)
-
     fun parsear(html: String): List<Jugador> {
         val filas = Jsoup.parse(html).select("tr:has($ENLACE_FICHA)").filter { it.children().size == CELDAS }
         if (filas.isEmpty()) throw LecturaException("El ranking no tiene jugadores reconocibles")
-        return filas.map(::jugador).filterNot { it.codigo in EXCLUIDOS }
+        return filas.map(::jugador).filterNot { it.codigo in FICHAS_EXCLUIDAS }
     }
 
     private fun jugador(fila: Element): Jugador {

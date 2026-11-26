@@ -15,7 +15,7 @@
     <string name="login_ingresando">Ingresando…</string>
     <string name="login_registrarme">Registrarme</string>
     <string name="login_olvide_clave">Olvidé mi clave</string>
-    <string name="login_modo_demo">Modo demo: código 12345, clave demo</string>
+    <string name="login_modo_demo">Modo demo: código 99999, clave demo</string>
     <string name="login_error_datos_incompletos">Completá tu código y tu clave.</string>
     <string name="login_error_credenciales">El código o la clave no son correctos.</string>
     <string name="login_error_sin_conexion">No hay conexión a internet. Conectate y volvé a intentar.</string>

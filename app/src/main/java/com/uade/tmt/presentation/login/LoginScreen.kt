@@ -225,7 +225,7 @@ private fun LoginPreview() {
     TMTTheme {
         Surface {
             LoginContent(
-                estado = LoginUiState(codigo = "12345", error = ErrorLogin.ERROR_SITIO, modoDemo = true),
+                estado = LoginUiState(codigo = "99999", error = ErrorLogin.ERROR_SITIO, modoDemo = true),
                 onCodigo = {},
                 onClave = {},
                 onIngresar = {},
