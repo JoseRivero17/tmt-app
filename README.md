@@ -8,10 +8,10 @@ con consulta sin conexión.
 
 ## Integrantes
 
-| Integrante | Rol |
-|---|---|
-| José Rivero | _completar_ |
-| _completar_ | _completar_ |
+| Integrante            | Rol |
+|-----------------------|---|
+| José Rivero           | _completar_ |
+| Delfina Gomez Puegher | _completar_ |
 
 ## Stack
 
@@ -64,3 +64,17 @@ ni Room, ni el parser, así que un cambio en el HTML del sitio solo afecta a `da
 1. Clonar el repo y abrirlo con Android Studio.
 2. Esperar la sincronización de Gradle.
 3. Ejecutar la configuración `app` en un emulador o dispositivo con Android 8.0 o superior.
+
+## RF03 – Ranking, búsqueda y seguidos
+
+- Ranking por división (1ra a 8va) y búsqueda por nombre o código desde 3 caracteres, sin distinguir tildes ni mayúsculas.
+- Ficha del jugador con división, puesto, rating y club. Desde la ficha se puede seguir a un jugador y marcarlo como perfil propio ("Este soy yo"); solo puede haber un perfil propio y cambiarlo pide confirmación.
+- Pestaña "Seguidos": muestra los jugadores seguidos y el perfil propio con la fecha de su última actualización. Sale de lo guardado, así que funciona sin conexión.
+
+**Limitaciones y decisiones**
+
+- Solo se encuentran los primeros 100 jugadores de cada división, y la búsqueda muestra hasta 100 resultados.
+- El ranking se pide siempre por división: la página sin filtro tarda más que el timeout de 15 s.
+- El club se ve abreviado hasta que esté RF04.
+- No se muestran los últimos torneos del jugador: requieren leer otra página del sitio y quedaron fuera de esta entrega.
+- No se guardan edad ni fecha de nacimiento, y no se piden las fichas excluidas por el robots.txt.
