@@ -8,6 +8,20 @@ marcado en el código con `TODO(cuenta)`:
 grep -rn "TODO(cuenta)" app/src
 ```
 
+## Estado (26/11)
+
+Con la cuenta de Lucas se vieron, **sin enviar ninguna inscripción**, la barra con sesión y la página de
+categorías de un torneo. Quedaron anonimizadas en `loginExitoso.html` e `inscripcionFormulario.html`.
+
+| Parte | Estado |
+|---|---|
+| Login exitoso y nombre del jugador | Hecho: con sesión la barra dice "Bienvenido <nombre> \| Acceder a mi panel de control \| Salir". |
+| Cerrar sesión en el sitio | Hecho: `salir.asp`. |
+| Categorías, horarios y motivo de las no habilitadas | Hecho: `InscripcionParser.opciones`. |
+| Mensaje de clave incorrecta | Falta `loginClaveIncorrecta.html` (hoy cualquier otro mensaje es `CredencialesInvalidas`). |
+| Envío de la inscripción | Falta. "Inscribirme" abre un popup, `jugadores_inscripcionesForm.asp?index=<fila>` (500×500), con el formulario real. No se abrió porque no se sabe si abrirlo ya reserva. |
+| Respuesta al envío | Falta: requiere una inscripción real. |
+
 ## 1. Páginas a guardar
 
 Guardarlas desde el navegador con **Ctrl+S → "Página web, solo HTML"** (no "completa": no hacen falta
@@ -111,12 +125,16 @@ Informe: `app/build/reports/tests/testDebugUnitTest/index.html`.
 
 ## 5. Pasar a `SITIO_REAL = true`
 
-Solo cuando los `TODO(cuenta)` estén resueltos y sus tests pasen (antes, todo intento con sesión
-termina en `ErrorSitio`). En `app/build.gradle.kts`, dentro de `defaultConfig`:
+Para probar con una cuenta real sin cambiar ningún archivo:
 
-```kotlin
-buildConfigField("boolean", "SITIO_REAL", "true")
+```sh
+./gradlew installDebug -PsitioReal=true
 ```
+
+(En Android Studio: `sitioReal=true` en el `gradle.properties` del usuario, no en el del proyecto.)
+Hoy funcionan el login, Mi TMT con la ficha propia y las categorías de cada torneo; reservar termina en
+`ErrorSitio` hasta que se resuelva el envío. Dejarlo fijo en `true` recién cuando los `TODO(cuenta)` estén
+resueltos y sus tests pasen.
 
 `DefaultAppContainer` elige con ese flag `SitioAccesoRemoteDataSource` + `SitioInscripcionRemoteDataSource`
 (comparten el `CookieJarEnMemoria`) en lugar de las falsas. Para probar el real solo en debug se puede mover
