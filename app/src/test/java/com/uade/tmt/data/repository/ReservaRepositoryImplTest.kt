@@ -184,5 +184,9 @@ class ReservaRepositoryImplTest {
             }
             guardadas += inscripcion
         }
+
+        override suspend fun borrarTodas() {
+            guardadas.clear()
+        }
     }
 }

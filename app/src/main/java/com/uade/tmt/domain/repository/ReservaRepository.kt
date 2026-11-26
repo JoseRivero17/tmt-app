@@ -18,4 +18,10 @@ interface ReservaRepository {
 
     /** Reservas hechas desde la app, la más reciente primero. */
     fun observarInscripciones(): Flow<List<Inscripcion>>
+
+    /**
+     * El registro es del jugador con sesión: se vacía al cerrar sesión o al entrar con otra cuenta,
+     * para no mezclar las inscripciones de dos personas en el mismo teléfono.
+     */
+    suspend fun olvidarInscripciones()
 }

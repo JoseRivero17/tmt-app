@@ -238,7 +238,7 @@ private fun FilaInscripcion(item: InscripcionItem) {
 }
 
 @get:StringRes
-private val EstadoInscripcion.etiqueta: Int
+internal val EstadoInscripcion.etiqueta: Int
     get() = when (this) {
         EstadoInscripcion.RESERVADA -> R.string.perfil_estado_reservada
         EstadoInscripcion.LISTA_ESPERA -> R.string.perfil_estado_lista_espera

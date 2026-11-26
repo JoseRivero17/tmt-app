@@ -1,6 +1,7 @@
 package com.uade.tmt.presentation.reserva
 
 import androidx.lifecycle.SavedStateHandle
+import com.uade.tmt.domain.model.EstadoInscripcion
 import com.uade.tmt.domain.model.Inscripcion
 import com.uade.tmt.domain.model.OpcionInscripcion
 import com.uade.tmt.domain.model.ResultadoLogin
@@ -16,13 +17,14 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flowOf
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.time.Instant
 
 /** Sin Android ni `Dispatchers.Main`: el ViewModel corre en un scope Unconfined (RNF11). */
 class ReservaViewModelTest {
@@ -63,6 +65,22 @@ class ReservaViewModelTest {
         assertTrue(estado.terminada)
         assertEquals("12:00", estado.opcionElegida?.horario)
         assertEquals(listOf(TORNEO to "6ta"), reservas.pedidos)
+    }
+
+    @Test
+    fun `una categoria ya reservada desde la app aparece bloqueada con el motivo`() {
+        reservas.inscripciones = listOf(
+            Inscripcion(TORNEO, "6ta", EstadoInscripcion.RESERVADA, Instant.EPOCH),
+            Inscripcion(TORNEO + 1, "7ma", EstadoInscripcion.RESERVADA, Instant.EPOCH),
+        )
+        val vm = viewModel()
+
+        val sexta = vm.uiState.value.opciones.single { it.categoria == "6ta" }
+        assertFalse(sexta.habilitada)
+        assertEquals(ReservaViewModel.MOTIVO_YA_RESERVADA, sexta.motivo)
+        vm.elegir("6ta")
+        // No se puede elegir; queda elegida la única habilitada que sobra (RNF08).
+        assertEquals("7ma", vm.uiState.value.seleccionada)
     }
 
     @Test
@@ -274,7 +292,13 @@ class ReservaViewModelTest {
             return respuesta
         }
 
-        override fun observarInscripciones(): Flow<List<Inscripcion>> = emptyFlow()
+        var inscripciones = emptyList<Inscripcion>()
+
+        override fun observarInscripciones(): Flow<List<Inscripcion>> = flowOf(inscripciones)
+
+        override suspend fun olvidarInscripciones() {
+            inscripciones = emptyList()
+        }
     }
 
     private class ConectividadFalsa : Conectividad {

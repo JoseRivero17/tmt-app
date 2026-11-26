@@ -8,9 +8,11 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.toRoute
 import com.uade.tmt.TMTApplication
+import com.uade.tmt.domain.model.Inscripcion
 import com.uade.tmt.domain.model.MotivoFallo
 import com.uade.tmt.domain.model.Torneo
 import com.uade.tmt.domain.repository.Conectividad
+import com.uade.tmt.domain.repository.ReservaRepository
 import com.uade.tmt.domain.repository.TorneoRepository
 import com.uade.tmt.presentation.EstadoSync
 import com.uade.tmt.presentation.aEstado
@@ -19,6 +21,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.Instant
@@ -35,6 +38,8 @@ sealed interface TorneoDetalleUiState {
         val actualizando: Boolean,
         val fallo: MotivoFallo?,
         val sinConexion: Boolean,
+        /** RF02: lo que el jugador ya reservó en este torneo desde la app. */
+        val inscripciones: List<Inscripcion> = emptyList(),
     ) : TorneoDetalleUiState
 }
 
@@ -42,6 +47,7 @@ class TorneoDetalleViewModel(
     private val codigo: Int,
     private val repositorio: TorneoRepository,
     conectividad: Conectividad,
+    reservas: ReservaRepository,
 ) : ViewModel() {
 
     private val sync = MutableStateFlow(EstadoSync())
@@ -54,7 +60,8 @@ class TorneoDetalleViewModel(
         repositorio.observarActualizacionTorneo(codigo),
         sync,
         conectado,
-    ) { torneo, actualizadoEn, sync, conectado ->
+        reservas.observarInscripciones().map { lista -> lista.filter { it.torneoCodigo == codigo } },
+    ) { torneo, actualizadoEn, sync, conectado, inscripciones ->
         when {
             torneo != null -> TorneoDetalleUiState.Contenido(
                 torneo = torneo,
@@ -62,6 +69,7 @@ class TorneoDetalleViewModel(
                 actualizando = sync.enCurso,
                 fallo = sync.fallo,
                 sinConexion = !conectado || sync.fallo == MotivoFallo.SIN_CONEXION,
+                inscripciones = inscripciones,
             )
 
             sync.fallo != null -> TorneoDetalleUiState.Error(sync.fallo)
@@ -82,7 +90,12 @@ class TorneoDetalleViewModel(
             initializer {
                 val app = this[APPLICATION_KEY] as TMTApplication
                 val ruta = createSavedStateHandle().toRoute<TorneoDetalle>()
-                TorneoDetalleViewModel(ruta.codigo, app.container.torneoRepository, app.container.conectividad)
+                TorneoDetalleViewModel(
+                    ruta.codigo,
+                    app.container.torneoRepository,
+                    app.container.conectividad,
+                    app.container.reservaRepository,
+                )
             }
         }
     }

@@ -1,15 +1,20 @@
 package com.uade.tmt.domain.usecase
 
+import com.uade.tmt.domain.model.Inscripcion
 import com.uade.tmt.domain.model.Jugador
+import com.uade.tmt.domain.model.ResultadoOpciones
+import com.uade.tmt.domain.model.ResultadoReserva
 import com.uade.tmt.domain.model.ResultadoLogin
 import com.uade.tmt.domain.model.ResultadoSync
 import com.uade.tmt.domain.model.Seguido
 import com.uade.tmt.domain.model.SesionJugador
 import com.uade.tmt.domain.repository.JugadorRepository
+import com.uade.tmt.domain.repository.ReservaRepository
 import com.uade.tmt.domain.repository.SesionRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -21,8 +26,9 @@ class PerfilPropioUseCasesTest {
 
     private val sesiones = SesionFalsa()
     private val jugadores = JugadoresFalsos()
-    private val iniciarSesion = IniciarSesion(sesiones, jugadores)
-    private val cerrarSesion = CerrarSesion(sesiones, jugadores)
+    private val reservas = RegistroFalso()
+    private val iniciarSesion = IniciarSesion(sesiones, jugadores, reservas)
+    private val cerrarSesion = CerrarSesion(sesiones, jugadores, reservas)
 
     @Test
     fun `iniciar sesion deja ese codigo como perfil propio`() = runBlocking {
@@ -45,7 +51,7 @@ class PerfilPropioUseCasesTest {
     }
 
     @Test
-    fun `cerrar sesion quita el perfil propio`() = runBlocking {
+    fun `cerrar sesion quita el perfil propio y vacia el registro de inscripciones`() = runBlocking {
         sesiones.respuesta = ResultadoLogin.Ok(SesionJugador("10077"))
         iniciarSesion("10077", "clave")
 
@@ -53,7 +59,41 @@ class PerfilPropioUseCasesTest {
 
         assertNull(sesiones.sesion.value)
         assertNull(jugadores.perfilPropio)
+        assertEquals(1, reservas.vaciados)
     }
+
+    @Test
+    fun `si entra otra cuenta se vacia el registro de la anterior`() = runBlocking {
+        jugadores.perfilPropio = 99999
+        sesiones.respuesta = ResultadoLogin.Ok(SesionJugador("10077"))
+
+        iniciarSesion("10077", "clave")
+
+        assertEquals(1, reservas.vaciados)
+        assertEquals(10077, jugadores.perfilPropio)
+    }
+
+    @Test
+    fun `si vuelve a entrar la misma cuenta el registro se conserva`() = runBlocking {
+        jugadores.perfilPropio = 10077
+        sesiones.respuesta = ResultadoLogin.Ok(SesionJugador("10077"))
+
+        iniciarSesion("10077", "clave")
+
+        assertEquals(0, reservas.vaciados)
+    }
+}
+
+private class RegistroFalso : ReservaRepository {
+    var vaciados = 0
+
+    override suspend fun olvidarInscripciones() {
+        vaciados++
+    }
+
+    override suspend fun obtenerOpciones(torneoCodigo: Int) = ResultadoOpciones.ErrorSitio
+    override suspend fun reservar(torneoCodigo: Int, categoria: String) = ResultadoReserva.ErrorSitio
+    override fun observarInscripciones(): Flow<List<Inscripcion>> = emptyFlow()
 }
 
 private class SesionFalsa : SesionRepository {
@@ -80,7 +120,7 @@ internal class JugadoresFalsos : JugadorRepository {
         perfilPropio = null
     }
 
-    override fun observarCodigoPropio(): Flow<Int?> = MutableStateFlow(perfilPropio)
+    override fun observarCodigoPropio(): Flow<Int?> = flowOf(perfilPropio)
     override fun observarRanking(division: String): Flow<List<Jugador>> = emptyFlow()
     override fun observarActualizacionRanking(division: String): Flow<Instant?> = emptyFlow()
     override fun buscar(texto: String): Flow<List<Jugador>> = emptyFlow()

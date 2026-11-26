@@ -54,13 +54,13 @@ data class PerfilUiState(
 @OptIn(ExperimentalCoroutinesApi::class)
 class PerfilViewModel(
     private val sesiones: SesionRepository,
-    reservas: ReservaRepository,
+    private val reservas: ReservaRepository,
     torneos: TorneoRepository,
     private val jugadores: JugadorRepository,
     scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate),
 ) : ViewModel(scope) {
 
-    private val cerrarSesionUseCase = CerrarSesion(sesiones, jugadores)
+    private val cerrarSesionUseCase = CerrarSesion(sesiones, jugadores, reservas)
     private val syncFicha = MutableStateFlow(EstadoSync())
 
     /** Sale de lo guardado, así que se ve sin conexión. */

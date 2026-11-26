@@ -37,6 +37,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.uade.tmt.R
 import com.uade.tmt.domain.model.CategoriaTorneo
+import com.uade.tmt.domain.model.Inscripcion
 import com.uade.tmt.domain.model.MotivoFallo
 import com.uade.tmt.domain.model.Torneo
 import com.uade.tmt.presentation.components.ErrorState
@@ -45,6 +46,7 @@ import com.uade.tmt.presentation.components.LastUpdatedBanner
 import com.uade.tmt.presentation.components.LoadingState
 import com.uade.tmt.presentation.components.OfflineState
 import com.uade.tmt.presentation.mensaje
+import com.uade.tmt.presentation.perfil.etiqueta
 import com.uade.tmt.presentation.theme.TMTTheme
 import com.uade.tmt.presentation.torneos.EstadoTorneo
 import com.uade.tmt.presentation.torneos.Renglon
@@ -118,15 +120,45 @@ private fun TorneoDetalleContent(
                     onRefresh = onActualizar,
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    DatosTorneo(estado.torneo, estado.sinConexion, onInscribirme)
+                    DatosTorneo(estado.torneo, estado.sinConexion, estado.inscripciones, onInscribirme)
                 }
             }
         }
     }
 }
 
+/** RF02: lo que el jugador ya reservó en este torneo desde la app, para no volver a inscribirse. */
 @Composable
-private fun DatosTorneo(torneo: Torneo, sinConexion: Boolean, onInscribirme: (Int) -> Unit) {
+private fun TusInscripciones(inscripciones: List<Inscripcion>) {
+    Surface(
+        shape = MaterialTheme.shapes.medium,
+        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .semantics(mergeDescendants = true) {},
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+            Text(text = stringResource(R.string.torneos_ya_inscripto), style = MaterialTheme.typography.titleSmall)
+            inscripciones.forEach {
+                Text(
+                    text = stringResource(R.string.torneos_inscripcion_categoria, it.categoria, stringResource(it.estado.etiqueta)),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun DatosTorneo(
+    torneo: Torneo,
+    sinConexion: Boolean,
+    inscripciones: List<Inscripcion>,
+    onInscribirme: (Int) -> Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -150,6 +182,8 @@ private fun DatosTorneo(torneo: Torneo, sinConexion: Boolean, onInscribirme: (In
             )
         }
 
+        if (inscripciones.isNotEmpty()) TusInscripciones(inscripciones)
+
         if (torneo.admiteReserva) {
             // RF02, criterio 3: sin conexión no se reserva ni se encola; se explica por qué.
             Button(
@@ -158,7 +192,11 @@ private fun DatosTorneo(torneo: Torneo, sinConexion: Boolean, onInscribirme: (In
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(min = 48.dp),
-            ) { Text(stringResource(R.string.torneos_inscribirme)) }
+            ) {
+                // Ya inscripto: se puede sumar otra categoría (las tomadas aparecen bloqueadas).
+                val texto = if (inscripciones.isEmpty()) R.string.torneos_inscribirme else R.string.torneos_inscribirme_otra
+                Text(stringResource(texto))
+            }
             if (sinConexion) {
                 Text(
                     text = stringResource(R.string.torneos_inscripcion_sin_conexion),
