@@ -25,13 +25,13 @@ class SitioInscripcionRemoteDataSourceTest {
     }
 
     @Test
-    fun `con sesion, mientras falte el formulario real, es error del sitio`() = runBlocking {
-        val conSesion = html("TenisMesaWeb.html")
-            .replace("""<input name="clave" type="password" id="clave25" size="4" class="campo">""", "")
-        val fuente = SitioInscripcionRemoteDataSource(ServicioFalso(conSesion))
+    fun `con sesion lee las categorias, y la reserva sigue sin el envio real`() = runBlocking {
+        val fuente = SitioInscripcionRemoteDataSource(ServicioFalso(html("inscripcionFormulario.html")))
 
-        assertEquals(ResultadoOpciones.ErrorSitio, fuente.opciones(11036))
-        assertEquals(ResultadoReserva.ErrorSitio, fuente.reservar(11036, "7ma"))
+        val opciones = fuente.opciones(11035) as ResultadoOpciones.Disponibles
+        assertEquals(listOf("6ta", "8va", "4ta", "7ma"), opciones.opciones.map { it.categoria })
+        // Falta ver el popup jugadores_inscripcionesForm.asp y su respuesta (docs/rf02-pendiente-cuenta.md).
+        assertEquals(ResultadoReserva.ErrorSitio, fuente.reservar(11035, "4ta"))
     }
 
     private class ServicioFalso(private val respuesta: String) : InscripcionService {
