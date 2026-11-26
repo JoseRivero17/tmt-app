@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- RF03: ranking, ficha y seguidos -->
+    <string name="jugadores_buscar">Buscar por nombre o código</string>
+    <string name="jugadores_borrar_busqueda">Borrar búsqueda</string>
+    <string name="jugadores_buscar_ayuda">Escribí al menos 3 letras o números para buscar</string>
+    <string name="jugadores_sin_resultados">No encontramos jugadores para «%1$s».</string>
+    <string name="jugadores_sin_datos">No hay jugadores guardados para esta división.</string>
+    <plurals name="jugadores_resultados">
+        <item quantity="one">%1$d jugador para «%2$s»</item>
+        <item quantity="other">%1$d jugadores para «%2$s»</item>
+    </plurals>
+    <string name="jugadores_puesto">%1$d°</string>
+    <string name="jugadores_rating">%1$d pts</string>
+</resources>
