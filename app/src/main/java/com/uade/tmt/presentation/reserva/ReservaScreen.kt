@@ -334,6 +334,14 @@ private fun ResultadoFinal(estado: ReservaUiState, onVolver: () -> Unit) {
         detalle?.let {
             Text(text = it, style = MaterialTheme.typography.bodyLarge, textAlign = TextAlign.Center)
         }
+        if (estado.envioSimulado && estado.resultado != ResultadoReserva.Incierta) {
+            Text(
+                text = stringResource(R.string.reserva_envio_simulado),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+            )
+        }
         // Incierta: sin reintentar; solo revisar en el sitio.
         if (estado.resultado == ResultadoReserva.Incierta) {
             Button(

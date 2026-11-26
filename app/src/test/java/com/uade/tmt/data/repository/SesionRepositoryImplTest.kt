@@ -124,9 +124,17 @@ class SesionRepositoryImplTest {
         assertEquals(ResultadoLogin.DatosIncompletos, repo.login("99999", "demo"))
     }
 
+    @Test
+    fun `con la fuente real, el login exitoso trae el nombre de la barra`() = runBlocking {
+        val repo = SesionRepositoryImpl(sitioQueResponde(html("loginExitoso.html")))
+
+        assertEquals(ResultadoLogin.Ok(SesionJugador("1001", "Ana Ejemplo")), repo.login("1001", "clave"))
+    }
+
     private fun sitioQueResponde(respuesta: String) = SitioAccesoRemoteDataSource(
         object : AccesoService {
             override suspend fun ingresar(codigo: String, clave: String) = respuesta
+            override suspend fun salir() = ""
         },
         CookieJarEnMemoria(),
     )

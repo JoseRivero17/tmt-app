@@ -35,10 +35,15 @@ class AccesoParserTest {
     }
 
     @Test
-    fun `sin titulo de acceso, sin mensaje y sin campo de clave es exito`() {
-        val conSesion = home.replace(CAMPO_CLAVE_HOME, "")
+    fun `con sesion la barra saluda al jugador y ofrece salir`() {
+        assertEquals(EstadoAcceso.Exito(nombre = "Ana Ejemplo"), AccesoParser.parsear(html("loginExitoso.html")))
+    }
 
-        assertEquals(EstadoAcceso.Exito(nombre = null), AccesoParser.parsear(conSesion))
+    @Test
+    fun `sin formulario de acceso ni enlace para salir no se asume sesion`() {
+        val sinNada = home.replace(CAMPO_CLAVE_HOME, "")
+
+        assertThrows(LecturaException::class.java) { AccesoParser.parsear(sinNada) }
     }
 
     @Test

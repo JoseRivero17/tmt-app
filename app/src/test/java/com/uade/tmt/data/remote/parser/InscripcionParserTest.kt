@@ -1,15 +1,65 @@
 package com.uade.tmt.data.remote.parser
 
+import com.uade.tmt.data.remote.LecturaException
+import com.uade.tmt.domain.model.OpcionInscripcion
 import com.uade.tmt.domain.model.ResultadoOpciones
 import com.uade.tmt.domain.model.ResultadoReserva
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class InscripcionParserTest {
 
     private val inscripcion = html("inscripcion.html")
+    private val formulario = html("inscripcionFormulario.html")
+
+    @Test
+    fun `con sesion lista las categorias, su horario y por que no se pueden elegir`() {
+        val motivo = "Tu rating no te habilita a inscribirte en esta competencia."
+        assertEquals(
+            ResultadoOpciones.Disponibles(
+                listOf(
+                    OpcionInscripcion("6ta", "13:30", habilitada = false, motivo = motivo),
+                    OpcionInscripcion("8va", "14:00", habilitada = false, motivo = motivo),
+                    OpcionInscripcion("4ta", "16:00", habilitada = true),
+                    OpcionInscripcion("7ma", "16:30", habilitada = false, motivo = motivo),
+                ),
+            ),
+            InscripcionParser.opciones(formulario),
+        )
+    }
+
+    @Test
+    fun `los campos del envio son los de la fila mas las dos casillas aceptadas`() {
+        assertEquals(
+            mapOf(
+                "categoria_cod" to "19",
+                "categoria" to "4ta",
+                "torneo_fecha" to "20261128",
+                "torneo_cod" to "11035",
+                "localidad" to "VILLA MARTELLI",
+                "horario" to "16:00 hs.",
+                "consentimiento" to "1",
+                "chkResp" to "on",
+                "chkDDJJ" to "on",
+            ),
+            InscripcionParser.camposEnvio(formulario, "4ta"),
+        )
+    }
+
+    @Test
+    fun `una categoria no habilitada o que no figura no tiene campos de envio`() {
+        assertNull(InscripcionParser.camposEnvio(formulario, "6ta"))
+        assertNull(InscripcionParser.camposEnvio(formulario, "1ra"))
+    }
+
+    @Test
+    fun `el formulario con sesion no pide sesion`() {
+        assertFalse(InscripcionParser.pideSesion(formulario))
+    }
 
     @Test
     fun `inscripciones sin sesion pide sesion`() {
@@ -38,8 +88,8 @@ class InscripcionParserTest {
     }
 
     @Test
-    fun `sin la pagina real del formulario las opciones son error del sitio`() {
-        assertEquals(ResultadoOpciones.ErrorSitio, InscripcionParser.opciones(inscripcion))
+    fun `una pagina sin categorias no se adivina y la respuesta al envio sigue sin conocerse`() {
+        assertThrows(LecturaException::class.java) { InscripcionParser.opciones(inscripcion) }
         assertEquals(ResultadoReserva.ErrorSitio, InscripcionParser.resultadoReserva(inscripcion))
     }
 }

@@ -6,13 +6,18 @@ import com.uade.tmt.domain.model.ResultadoReserva
 import java.io.IOException
 
 /**
- * Inscripción real contra el sitio. Usa la sesión que dejó el login en el CookieJar compartido.
+ * Inscripción contra el sitio real. Usa la sesión que dejó el login en el CookieJar compartido.
  *
- * Mientras falte la página del formulario con sesión, todo camino que no sea "pide sesión"
- * termina en `ErrorSitio` (ver los TODO(cuenta) de [InscripcionParser] y [enviarReserva]).
+ * Con [enviarAlSitio] en `false` (lo que usa la app) todo se valida contra el sitio (sesión,
+ * categorías y si la del jugador está habilitada, y se arman los campos del envío), pero el POST
+ * final no se manda y el resultado es [ResultadoReserva.Reservada]: así se prueba el flujo con una
+ * cuenta real sin inscribir a nadie. Pasarlo a `true` recién cuando [InscripcionParser.resultadoReserva]
+ * sepa leer la respuesta (ver docs/rf02-pendiente-cuenta.md): si no, una inscripción hecha se vería
+ * como un error.
  */
 class SitioInscripcionRemoteDataSource(
     private val servicio: InscripcionService,
+    private val enviarAlSitio: Boolean = false,
 ) : InscripcionRemoteDataSource {
 
     override suspend fun opciones(torneoCodigo: Int): ResultadoOpciones {
@@ -23,45 +28,32 @@ class SitioInscripcionRemoteDataSource(
 
     override suspend fun reservar(torneoCodigo: Int, categoria: String): ResultadoReserva {
         // Se pide el formulario justo antes de enviar: confirma la sesión y trae los campos
-        // ocultos que el sitio pueda exigir en el POST.
+        // ocultos de la categoría, que el sitio exige en el POST.
         val formulario = servicio.formulario(torneoCodigo)
         if (InscripcionParser.pideSesion(formulario)) return ResultadoReserva.SesionRequerida
-        return enviarReserva(formulario, torneoCodigo, categoria)
+
+        val campos = InscripcionParser.camposEnvio(formulario, categoria)
+            ?: return ResultadoReserva.Rechazada(motivoNoHabilitada(formulario, categoria))
+        if (!enviarAlSitio) return ResultadoReserva.Reservada
+        return enviar(campos)
     }
 
     /**
-     * Envía el formulario de inscripción y lee la respuesta con [InscripcionParser.resultadoReserva].
-     *
      * Una IOException DURANTE el envío es [ResultadoReserva.Incierta]: el sitio pudo haber registrado
-     * la reserva aunque la respuesta no llegó. Las de antes (al pedir el formulario en [reservar])
-     * suben como siempre y el repositorio las informa como `SinConexion`.
+     * la reserva aunque la respuesta no llegó. No se reintenta el POST: podría inscribir dos veces.
      */
-    private suspend fun enviarReserva(
-        formulario: String,
-        torneoCodigo: Int,
-        categoria: String,
-    ): ResultadoReserva {
+    private suspend fun enviar(campos: Map<String, String>): ResultadoReserva {
         val respuesta = try {
-            enviarFormulario(formulario, torneoCodigo, categoria) ?: return ResultadoReserva.ErrorSitio
+            servicio.enviar(campos)
         } catch (e: IOException) {
             return ResultadoReserva.Incierta
         }
         return InscripcionParser.resultadoReserva(respuesta)
     }
 
-    /**
-     * POST del formulario de inscripción; devuelve el HTML de la respuesta.
-     *
-     * TODO(cuenta): con la página del FORMULARIO guardada (jugadores_inscripciones.asp?torneo_cod=X
-     * con sesión iniciada) se ven el `action` del `<form>`, el método y los campos (categoría,
-     * aceptación de condiciones, campos ocultos). Con eso: agregar el POST a [InscripcionService] y
-     * llamarlo acá. Mientras no exista devuelve `null` (→ `ErrorSitio`). No reintentar el POST
-     * automáticamente: si se corta la conexión no se sabe si el sitio lo registró.
-     */
-    @Suppress("UNUSED_PARAMETER", "RedundantSuspendModifier", "RedundantNullableReturnType")
-    private suspend fun enviarFormulario(
-        formulario: String,
-        torneoCodigo: Int,
-        categoria: String,
-    ): String? = null
+    private fun motivoNoHabilitada(formulario: String, categoria: String): String {
+        val opciones = InscripcionParser.opciones(formulario) as? ResultadoOpciones.Disponibles
+        return opciones?.opciones?.firstOrNull { it.categoria == categoria }?.motivo
+            ?: "La categoría $categoria ya no está disponible para inscribirse."
+    }
 }
