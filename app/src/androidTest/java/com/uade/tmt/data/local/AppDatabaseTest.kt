@@ -125,9 +125,25 @@ class AppDatabaseTest {
             ).map { it.aEntidad(ahora) },
         )
 
-        assertEquals(listOf(123), dao.buscar("munoz").first().map { it.codigo })
-        assertEquals(listOf(456), dao.buscar("456").first().map { it.codigo })
+        assertEquals(listOf(123), dao.buscar("munoz").first().map { it.jugador.codigo })
+        assertEquals(listOf(456), dao.buscar("456").first().map { it.jugador.codigo })
         assertTrue(dao.buscar("zzz").first().isEmpty())
+    }
+
+    @Test
+    fun elRankingMuestraElNombreDelClubYRespetaElPuesto() = runBlocking {
+        val ahora = Instant.parse("2026-11-24T18:00:00Z")
+        db.clubDao().reemplazarTodos(listOf(Club(9, "Club Nueve").aEntidad()))
+        db.jugadorDao().guardar(
+            listOf(
+                Jugador(1, "B", "5ta", 2, 1300, clubCodigo = 8, club = "OCH"),
+                Jugador(2, "A", "5ta", 1, 1400, clubCodigo = 9, club = "NUE"),
+                Jugador(3, "C", "6ta", 1, 1100),
+            ).map { it.aEntidad(ahora) },
+        )
+
+        val ranking = db.jugadorDao().observarRanking("5ta").first().map { it.aDominio() }
+        assertEquals(listOf(2 to "Club Nueve", 1 to "OCH"), ranking.map { it.codigo to it.club })
     }
 
     @Test

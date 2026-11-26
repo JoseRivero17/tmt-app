@@ -8,7 +8,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.uade.tmt.BuildConfig
 import com.uade.tmt.TMTApplication
 import com.uade.tmt.domain.model.ResultadoLogin
-import com.uade.tmt.domain.repository.SesionRepository
+import com.uade.tmt.domain.usecase.IniciarSesion
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -48,7 +48,7 @@ data class LoginUiState(
  * cambia en los tests, que no tienen `Dispatchers.Main`.
  */
 class LoginViewModel(
-    private val sesiones: SesionRepository,
+    private val iniciarSesion: IniciarSesion,
     modoDemo: Boolean,
     scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate),
 ) : ViewModel(scope) {
@@ -69,7 +69,7 @@ class LoginViewModel(
         if (!estado.puedeIngresar) return
         _uiState.update { it.copy(cargando = true, error = null) }
         viewModelScope.launch {
-            val resultado = sesiones.login(estado.codigo, estado.clave)
+            val resultado = iniciarSesion(estado.codigo, estado.clave)
             _uiState.update {
                 when (resultado) {
                     // La clave se borra apenas deja de hacer falta.
@@ -88,7 +88,10 @@ class LoginViewModel(
         val Factory = viewModelFactory {
             initializer {
                 val app = this[APPLICATION_KEY] as TMTApplication
-                LoginViewModel(app.container.sesionRepository, modoDemo = !BuildConfig.SITIO_REAL)
+                LoginViewModel(
+                    IniciarSesion(app.container.sesionRepository, app.container.jugadorRepository),
+                    modoDemo = !BuildConfig.SITIO_REAL,
+                )
             }
         }
     }

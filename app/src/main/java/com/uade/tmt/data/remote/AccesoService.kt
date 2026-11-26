@@ -2,6 +2,7 @@ package com.uade.tmt.data.remote
 
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 /**
@@ -19,4 +20,8 @@ interface AccesoService {
         @Field("codigo") codigo: String,
         @Field("clave") clave: String,
     ): String
+
+    /** El enlace "Salir" de la barra con sesión: cierra la sesión del lado del sitio. */
+    @GET("salir.asp")
+    suspend fun salir(): String
 }

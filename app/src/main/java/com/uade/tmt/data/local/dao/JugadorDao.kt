@@ -2,7 +2,9 @@ package com.uade.tmt.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Upsert
+import com.uade.tmt.data.local.entity.JugadorConClub
 import com.uade.tmt.data.local.entity.JugadorEntity
 import com.uade.tmt.data.local.entity.JugadorSeguido
 import com.uade.tmt.data.local.entity.SeguidoEntity
@@ -11,13 +13,19 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface JugadorDao {
 
+    @Transaction
     @Query("SELECT * FROM jugadores WHERE division = :division ORDER BY puesto IS NULL, puesto, nombre")
-    fun observarRanking(division: String): Flow<List<JugadorEntity>>
+    fun observarRanking(division: String): Flow<List<JugadorConClub>>
+
+    @Transaction
+    @Query("SELECT * FROM jugadores WHERE codigo = :codigo")
+    fun observar(codigo: Int): Flow<JugadorConClub?>
 
     @Query("SELECT * FROM jugadores WHERE codigo = :codigo")
-    fun observar(codigo: Int): Flow<JugadorEntity?>
+    suspend fun buscarPorCodigo(codigo: Int): JugadorEntity?
 
     /** [texto] llega ya normalizado. */
+    @Transaction
     @Query(
         """
         SELECT * FROM jugadores
@@ -26,8 +34,9 @@ interface JugadorDao {
         LIMIT 100
         """,
     )
-    fun buscar(texto: String): Flow<List<JugadorEntity>>
+    fun buscar(texto: String): Flow<List<JugadorConClub>>
 
+    @Transaction
     @Query(
         """
         SELECT j.*, s.esPropio FROM seguidos s
@@ -45,4 +54,11 @@ interface JugadorDao {
 
     @Query("DELETE FROM seguidos WHERE jugadorCodigo = :codigo")
     suspend fun dejarDeSeguir(codigo: Int)
+
+    /** Código del perfil propio aunque su ficha todavía no se haya bajado. */
+    @Query("SELECT jugadorCodigo FROM seguidos WHERE esPropio = 1 LIMIT 1")
+    fun observarCodigoPropio(): Flow<Int?>
+
+    @Query("DELETE FROM seguidos WHERE esPropio = 1")
+    suspend fun quitarPropio()
 }

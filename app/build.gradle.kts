@@ -22,7 +22,9 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         // RF02: false usa el acceso falso (FakeAccesoRemoteDataSource); true, el sitio real.
-        buildConfigField("boolean", "SITIO_REAL", "false")
+        // Para probar con una cuenta real sin cambiar este archivo: ./gradlew installDebug -PsitioReal=true
+        val sitioReal = providers.gradleProperty("sitioReal").orNull == "true"
+        buildConfigField("boolean", "SITIO_REAL", sitioReal.toString())
     }
 
     buildTypes {

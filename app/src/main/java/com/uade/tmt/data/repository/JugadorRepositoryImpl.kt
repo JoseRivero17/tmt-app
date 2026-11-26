@@ -8,12 +8,15 @@ import com.uade.tmt.data.mapper.aEntidad
 import com.uade.tmt.data.mapper.normalizado
 import com.uade.tmt.data.remote.LecturaException
 import com.uade.tmt.data.remote.TmtRemoteDataSource
+import com.uade.tmt.domain.model.DIVISIONES
 import com.uade.tmt.domain.model.Jugador
+import com.uade.tmt.domain.model.MotivoFallo
 import com.uade.tmt.domain.model.Recurso
 import com.uade.tmt.domain.model.ResultadoSync
 import com.uade.tmt.domain.model.Seguido
 import com.uade.tmt.domain.repository.JugadorRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.time.Clock
 import java.time.Instant
@@ -41,10 +44,43 @@ class JugadorRepositoryImpl(
     override fun observarSeguidos(): Flow<List<Seguido>> =
         dao.observarSeguidos().map { lista -> lista.map { it.aDominio() } }
 
-    override suspend fun seguir(codigo: Int, esPropio: Boolean) =
-        dao.seguir(SeguidoEntity(codigo, esPropio))
+    override suspend fun seguir(codigo: Int) = dao.seguir(SeguidoEntity(codigo, esPropio = false))
 
     override suspend fun dejarDeSeguir(codigo: Int) = dao.dejarDeSeguir(codigo)
+
+    override fun observarCodigoPropio(): Flow<Int?> = dao.observarCodigoPropio()
+
+    override suspend fun establecerPerfilPropio(codigo: Int) {
+        dao.quitarPropio()
+        dao.seguir(SeguidoEntity(codigo, esPropio = true))
+    }
+
+    override suspend fun quitarPerfilPropio() = dao.quitarPropio()
+
+    /**
+     * Si el jugador ya estaba guardado por el ranking, se conservan su nombre (que el ranking trae
+     * como "Apellido, Nombre"), su provincia y su puesto en la división: la ficha no los tiene.
+     */
+    override suspend fun sincronizarFicha(codigo: Int, forzar: Boolean): ResultadoSync =
+        sincronizador.sincronizar(Recurso.ficha(codigo), forzar) {
+            val ficha = remoto.ficha(codigo)
+            val anterior = dao.buscarPorCodigo(codigo)
+            val combinado = if (anterior == null) {
+                ficha
+            } else {
+                ficha.copy(
+                    nombre = anterior.nombre,
+                    provincia = anterior.provincia,
+                    puesto = anterior.puesto.takeIf { anterior.division == ficha.division },
+                )
+            }
+            dao.guardar(listOf(combinado.aEntidad(clock.instant())))
+        }
+
+    override suspend fun sincronizarPerfilPropio(forzar: Boolean): ResultadoSync {
+        val codigo = dao.observarCodigoPropio().first() ?: return ResultadoSync.Vigente
+        return sincronizarFicha(codigo, forzar)
+    }
 
     override suspend fun sincronizarRanking(division: String, forzar: Boolean): ResultadoSync =
         sincronizador.sincronizar(Recurso.ranking(division), forzar) {
@@ -53,4 +89,24 @@ class JugadorRepositoryImpl(
             val ahora = clock.instant()
             dao.guardar(jugadores.map { it.aEntidad(ahora) })
         }
+
+    /**
+     * De a una división, para no cargar al sitio. Las que siguen vigentes no se vuelven a pedir.
+     * Si el sitio falla en una, se sigue con las demás; si no hay conexión, no tiene sentido seguir.
+     */
+    override suspend fun precargarRanking(): ResultadoSync {
+        var resultado: ResultadoSync = ResultadoSync.Vigente
+        for (division in DIVISIONES) {
+            when (val parcial = sincronizarRanking(division, forzar = false)) {
+                is ResultadoSync.Fallo -> {
+                    if (parcial.motivo == MotivoFallo.SIN_CONEXION) return parcial
+                    resultado = parcial
+                }
+
+                ResultadoSync.Actualizado -> if (resultado !is ResultadoSync.Fallo) resultado = parcial
+                ResultadoSync.Vigente -> Unit
+            }
+        }
+        return resultado
+    }
 }

@@ -10,6 +10,7 @@ import com.uade.tmt.presentation.clubes.ClubesScreen
 import com.uade.tmt.presentation.clubes.detalle.ClubDetalleScreen
 import com.uade.tmt.presentation.login.LoginScreen
 import com.uade.tmt.presentation.perfil.PerfilScreen
+import com.uade.tmt.presentation.ranking.FichaJugadorScreen
 import com.uade.tmt.presentation.ranking.RankingScreen
 import com.uade.tmt.presentation.reserva.ReservaScreen
 import com.uade.tmt.presentation.torneos.TorneosScreen
@@ -45,7 +46,16 @@ fun TmtNavHost(
                 )
             }
         }
-        composable<Ranking> { RankingScreen() }
+
+        navigation<Ranking>(startDestination = RankingLista) {
+            composable<RankingLista> {
+                RankingScreen(onJugadorClick = { navController.navigate(JugadorFicha(it)) })
+            }
+            composable<JugadorFicha> {
+                FichaJugadorScreen(onVolver = navController::popBackStack)
+            }
+        }
+
         // Igual que Torneos: la pestaña sigue marcada en el detalle y la lista conserva su estado.
         navigation<Clubes>(startDestination = ClubesLista) {
             composable<ClubesLista> {

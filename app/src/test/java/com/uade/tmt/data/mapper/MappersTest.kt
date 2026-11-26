@@ -1,6 +1,7 @@
 package com.uade.tmt.data.mapper
 
 import com.uade.tmt.data.local.entity.ClubEntity
+import com.uade.tmt.data.local.entity.JugadorConClub
 import com.uade.tmt.data.local.entity.TorneoConCategorias
 import com.uade.tmt.domain.model.CategoriaTorneo
 import com.uade.tmt.domain.model.Jugador
@@ -51,7 +52,16 @@ class MappersTest {
         val entidad = jugador.aEntidad(ahora)
 
         assertEquals("nunez", entidad.nombreBusqueda)
-        assertEquals(jugador.copy(actualizadoEn = ahora), entidad.aDominio())
+        assertEquals(jugador.copy(actualizadoEn = ahora), JugadorConClub(entidad, club = null).aDominio())
+    }
+
+    @Test
+    fun `el jugador muestra el nombre del club y, si no se conoce, la abreviatura`() {
+        val entidad = Jugador(5, "Ana", "5ta", 3, 1400, clubCodigo = 9, club = "CLU").aEntidad(Instant.EPOCH)
+        val club = ClubEntity(9, "Club Nueve", null, null, null, null, null, null)
+
+        assertEquals("Club Nueve", JugadorConClub(entidad, club).aDominio().club)
+        assertEquals("CLU", JugadorConClub(entidad, null).aDominio().club)
     }
 
     @Test

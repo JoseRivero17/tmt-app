@@ -36,3 +36,10 @@ data object Login
 
 @Serializable
 data class Reserva(val torneoCodigo: Int)
+
+/** Pantallas dentro de la sección Jugadores (RF03). */
+@Serializable
+data object RankingLista
+
+@Serializable
+data class JugadorFicha(val codigo: Int)

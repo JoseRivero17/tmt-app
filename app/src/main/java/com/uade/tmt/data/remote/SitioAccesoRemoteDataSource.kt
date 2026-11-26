@@ -14,8 +14,12 @@ class SitioAccesoRemoteDataSource(
     override suspend fun ingresar(codigo: String, clave: String): EstadoAcceso =
         AccesoParser.parsear(servicio.ingresar(codigo, clave))
 
-    // TODO(cuenta): ver si el sitio tiene una URL de salida que cierre la sesión del lado del servidor.
+    /** Avisa al sitio con `salir.asp` y borra las cookies aunque ese pedido falle. */
     override suspend fun cerrarSesion() {
-        cookies.limpiar()
+        try {
+            servicio.salir()
+        } finally {
+            cookies.limpiar()
+        }
     }
 }

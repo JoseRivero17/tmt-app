@@ -5,8 +5,10 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
- * Acceso inventado para desarrollar el RF02 sin cuenta en el sitio. Acepta solo el jugador de
- * demostración [CODIGO_DEMO] / [CLAVE_DEMO], que no existen en el sitio real.
+ * Acceso inventado para desarrollar y mostrar el RF02 sin usar una cuenta real. Acepta solo el
+ * jugador de demostración [CODIGO_DEMO] / [CLAVE_DEMO], que no existe en el sitio (el sitio
+ * redirige esa ficha), así que nunca se confunde con un jugador real. Su ficha la da
+ * [DemoRemoteDataSource].
  */
 class FakeAccesoRemoteDataSource(
     private val demora: Duration = 600.milliseconds,
@@ -24,7 +26,7 @@ class FakeAccesoRemoteDataSource(
     override suspend fun cerrarSesion() = Unit
 
     companion object {
-        const val CODIGO_DEMO = "12345"
+        const val CODIGO_DEMO = "99999"
         const val CLAVE_DEMO = "demo"
         const val NOMBRE_DEMO = "Jugador Demo"
     }

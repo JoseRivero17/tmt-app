@@ -80,3 +80,20 @@ sincronización previa se muestra el estado "Sin conexión" con reintentar.
 1. Clonar el repo y abrirlo con Android Studio.
 2. Esperar la sincronización de Gradle.
 3. Ejecutar la configuración `app` en un emulador o dispositivo con Android 8.0 o superior.
+
+## RF03 – Ranking, búsqueda y seguidos
+
+- Ranking por división (1ra a 8va) y búsqueda por nombre o código desde 3 caracteres, sin distinguir tildes ni mayúsculas.
+- Ficha del jugador con división, puesto, rating y club. Desde la ficha se puede seguir a un jugador.
+- Perfil propio: como en el sitio, es el del jugador que inició sesión (RF02); no se elige a mano. Su ficha se baja por código, así que aparece aunque no esté entre los primeros 100 de su división, y se ve en Mi TMT y primera en "Seguidos". Al cerrar sesión se quita.
+- Pestaña "Seguidos": muestra los jugadores seguidos y el perfil propio con la fecha de su última actualización. Sale de lo guardado, así que funciona sin conexión.
+
+**Limitaciones y decisiones**
+
+- Solo se encuentran los primeros 100 jugadores de cada división (más el perfil propio), y la búsqueda muestra hasta 100 resultados.
+- La ficha del sitio publica la posición en el ranking general, no dentro de la división: no se mezcla con el puesto por división del ranking, así que el perfil propio fuera de los 100 primeros se ve sin puesto.
+- Modo demo (`SITIO_REAL = false`): el login, la inscripción y el jugador de demostración (código 99999, clave demo) son inventados, porque probar contra el sitio haría inscripciones reales. Todo lo demás (calendario, torneos, ranking y fichas) se lee del sitio real.
+- El ranking se pide siempre por división: la página sin filtro tarda más que el timeout de 15 s.
+- El club se ve abreviado hasta que esté RF04.
+- No se muestran los últimos torneos del jugador: requieren leer otra página del sitio y quedaron fuera de esta entrega.
+- No se guardan edad ni fecha de nacimiento, y no se piden las fichas excluidas por el robots.txt.

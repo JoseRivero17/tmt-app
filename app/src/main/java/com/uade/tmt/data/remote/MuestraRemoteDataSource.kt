@@ -51,6 +51,9 @@ class MuestraRemoteDataSource(private val clock: Clock = Clock.systemDefaultZone
         )
     }
 
+    override suspend fun ficha(codigo: Int): Jugador =
+        Jugador(codigo, "JUGADOR DE MUESTRA", "7ma", puesto = null, rating = 1000, club = "Club de Muestra")
+
     override suspend fun clubes(): List<Club> = listOf(
         Club(1, "Club de Muestra", "Calle Inventada 123", "CABA", "11 0000-0000", latitud = -34.6037, longitud = -58.3816),
         Club(2, "Otro Club", "Avenida Ficticia 456", "LANUS", latitud = -34.7002, longitud = -58.3920),

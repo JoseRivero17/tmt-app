@@ -103,7 +103,7 @@ class SincronizadorTest {
     }
 }
 
-private class SyncInfoDaoFake : SyncInfoDao {
+internal class SyncInfoDaoFake : SyncInfoDao {
     val fechas = mutableMapOf<String, Instant>()
 
     override fun observar(recurso: String): Flow<Instant?> = flowOf(fechas[recurso])

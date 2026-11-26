@@ -25,21 +25,54 @@ class SitioInscripcionRemoteDataSourceTest {
     }
 
     @Test
-    fun `con sesion, mientras falte el formulario real, es error del sitio`() = runBlocking {
-        val conSesion = html("TenisMesaWeb.html")
-            .replace("""<input name="clave" type="password" id="clave25" size="4" class="campo">""", "")
-        val fuente = SitioInscripcionRemoteDataSource(ServicioFalso(conSesion))
+    fun `con sesion lee las categorias del sitio`() = runBlocking {
+        val fuente = SitioInscripcionRemoteDataSource(ServicioFalso(html("inscripcionFormulario.html")))
 
-        assertEquals(ResultadoOpciones.ErrorSitio, fuente.opciones(11036))
-        assertEquals(ResultadoReserva.ErrorSitio, fuente.reservar(11036, "7ma"))
+        val opciones = fuente.opciones(11035) as ResultadoOpciones.Disponibles
+        assertEquals(listOf("6ta", "8va", "4ta", "7ma"), opciones.opciones.map { it.categoria })
+    }
+
+    @Test
+    fun `sin enviar al sitio, una categoria habilitada se da por reservada y no se manda nada`() = runBlocking {
+        val servicio = ServicioFalso(html("inscripcionFormulario.html"))
+        val fuente = SitioInscripcionRemoteDataSource(servicio)
+
+        assertEquals(ResultadoReserva.Reservada, fuente.reservar(11035, "4ta"))
+        assertEquals(emptyList<Map<String, String>>(), servicio.envios)
+    }
+
+    @Test
+    fun `una categoria no habilitada se rechaza con el motivo del sitio`() = runBlocking {
+        val fuente = SitioInscripcionRemoteDataSource(ServicioFalso(html("inscripcionFormulario.html")))
+
+        assertEquals(
+            ResultadoReserva.Rechazada("Tu rating no te habilita a inscribirte en esta competencia."),
+            fuente.reservar(11035, "6ta"),
+        )
+    }
+
+    @Test
+    fun `enviando al sitio manda los campos del popup y, sin conocer la respuesta, no afirma nada`() = runBlocking {
+        val servicio = ServicioFalso(html("inscripcionFormulario.html"))
+        val fuente = SitioInscripcionRemoteDataSource(servicio, enviarAlSitio = true)
+
+        assertEquals(ResultadoReserva.ErrorSitio, fuente.reservar(11035, "4ta"))
+        assertEquals("19", servicio.envios.single()["categoria_cod"])
+        assertEquals("on", servicio.envios.single()["chkDDJJ"])
     }
 
     private class ServicioFalso(private val respuesta: String) : InscripcionService {
         val pedidos = mutableListOf<Int>()
+        val envios = mutableListOf<Map<String, String>>()
 
         override suspend fun formulario(torneoCodigo: Int): String {
             pedidos += torneoCodigo
             return respuesta
+        }
+
+        override suspend fun enviar(campos: Map<String, String>): String {
+            envios += campos
+            return ""
         }
     }
 }

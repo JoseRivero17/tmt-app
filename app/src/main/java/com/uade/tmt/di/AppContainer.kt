@@ -8,6 +8,7 @@ import com.uade.tmt.data.remote.AccesoRemoteDataSource
 import com.uade.tmt.data.remote.AccesoService
 import com.uade.tmt.data.remote.ConectividadAndroid
 import com.uade.tmt.data.remote.CookieJarEnMemoria
+import com.uade.tmt.data.remote.DemoRemoteDataSource
 import com.uade.tmt.data.remote.FakeAccesoRemoteDataSource
 import com.uade.tmt.data.remote.FakeInscripcionRemoteDataSource
 import com.uade.tmt.data.remote.InscripcionRemoteDataSource
@@ -30,6 +31,7 @@ import com.uade.tmt.domain.repository.ReservaRepository
 import com.uade.tmt.domain.repository.SesionRepository
 import com.uade.tmt.domain.repository.TorneoRepository
 import com.uade.tmt.domain.repository.UbicacionProvider
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
@@ -49,6 +51,9 @@ interface AppContainer {
     val reservaRepository: ReservaRepository
     val conectividad: Conectividad
     val ubicacion: UbicacionProvider
+
+    /** RF02: las inscripciones no llegan al sitio (modo demo, o sitio real sin el envío final). */
+    val inscripcionesSimuladas: Boolean
 }
 
 /**
@@ -67,7 +72,7 @@ class DefaultAppContainer(
     /**
      * Cliente HTTP compartido por toda la app.
      *
-     * - Timeouts de 15 s para conexión, lectura y escritura (RNF03).
+     * - Timeouts de 15 s para conexión, lectura y escritura (RNF03), salvo la lectura del ranking.
      * - Sin HttpLoggingInterceptor: la app maneja credenciales y no deben quedar
      *   escritas en los logs (RNF06).
      * - Cookies solo en memoria: mantienen la sesión del jugador (RF02) sin escribirla en disco.
@@ -78,7 +83,18 @@ class DefaultAppContainer(
             .connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
             .readTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
             .writeTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+            .addInterceptor(esperarMasElRanking)
             .build()
+    }
+
+    /**
+     * Excepción a RNF03: el sitio llega a tardar más de 20 s en armar el ranking de una división.
+     * Se carga de fondo y mientras tanto se ve lo guardado, así que esperar no frena ninguna pantalla.
+     */
+    private val esperarMasElRanking = Interceptor { chain ->
+        val esRanking = chain.request().url.encodedPath.endsWith("/ranking.asp")
+        val cadena = if (esRanking) chain.withReadTimeout(TIMEOUT_RANKING_SECONDS, TimeUnit.SECONDS) else chain
+        cadena.proceed(chain.request())
     }
 
     /**
@@ -100,8 +116,10 @@ class DefaultAppContainer(
 
     private val sincronizador: Sincronizador by lazy { Sincronizador(database.syncInfoDao()) }
 
+    /** Datos públicos del sitio. En modo demo, la ficha del jugador de demostración es inventada. */
     private val remoto: TmtRemoteDataSource by lazy {
-        SitioRemoteDataSource(retrofit.create(SitioService::class.java))
+        val sitio = SitioRemoteDataSource(retrofit.create(SitioService::class.java))
+        if (BuildConfig.SITIO_REAL) sitio else DemoRemoteDataSource(sitio)
     }
 
     override val torneoRepository: TorneoRepository by lazy {
@@ -136,6 +154,12 @@ class DefaultAppContainer(
         }
     }
 
+    /**
+     * Hoy siempre: en modo demo todo es inventado y con el sitio real se valida todo pero no se manda
+     * el POST final (ver [SitioInscripcionRemoteDataSource]).
+     */
+    override val inscripcionesSimuladas: Boolean = true
+
     override val reservaRepository: ReservaRepository by lazy {
         ReservaRepositoryImpl(inscripcion, database.inscripcionDao(), conectividad)
     }
@@ -148,5 +172,6 @@ class DefaultAppContainer(
     private companion object {
         const val BASE_URL = "https://tenisdemesaparatodos.com/"
         const val TIMEOUT_SECONDS = 15L
+        const val TIMEOUT_RANKING_SECONDS = 45
     }
 }

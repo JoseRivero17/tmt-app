@@ -42,6 +42,7 @@ class ReservaViewModel(
     conectividad: Conectividad,
     private val guardado: SavedStateHandle,
     private val reservarLugar: ReservarLugar = ReservarLugar(sesiones, reservas),
+    envioSimulado: Boolean = false,
     scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate),
 ) : ViewModel(scope) {
 
@@ -51,6 +52,7 @@ class ReservaViewModel(
             seleccionada = guardado[CLAVE_SELECCIONADA],
             condicionesAceptadas = guardado[CLAVE_CONDICIONES] ?: false,
             pendiente = guardado.get<String>(CLAVE_PENDIENTE)?.let(Pendiente::valueOf),
+            envioSimulado = envioSimulado,
         ),
     )
     val uiState: StateFlow<ReservaUiState> = _uiState.asStateFlow()
@@ -195,6 +197,7 @@ class ReservaViewModel(
                     sesiones = app.container.sesionRepository,
                     conectividad = app.container.conectividad,
                     guardado = guardado,
+                    envioSimulado = app.container.inscripcionesSimuladas,
                 )
             }
         }
