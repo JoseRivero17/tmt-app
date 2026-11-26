@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.toRoute
 import com.uade.tmt.TMTApplication
+import com.uade.tmt.domain.model.EstadoInscripcion
 import com.uade.tmt.domain.model.ResultadoOpciones
 import com.uade.tmt.domain.model.ResultadoReserva
 import com.uade.tmt.domain.repository.Conectividad
@@ -24,6 +25,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -139,7 +141,7 @@ class ReservaViewModel(
         carga = viewModelScope.launch {
             when (val resultado = reservas.obtenerOpciones(torneoCodigo)) {
                 is ResultadoOpciones.Disponibles -> {
-                    mostrarOpciones(resultado)
+                    mostrarOpciones(marcarInscriptas(resultado))
                     if (reanudarReserva) reanudar()
                 }
                 ResultadoOpciones.SesionRequerida -> {
@@ -153,6 +155,26 @@ class ReservaViewModel(
                 ResultadoOpciones.ErrorSitio -> _uiState.update { it.copy(carga = CargaOpciones.ERROR_SITIO) }
             }
         }
+    }
+
+    /**
+     * Las categorías que el jugador ya reservó desde la app aparecen bloqueadas con el motivo: si no,
+     * el sitio (o la simulación) aceptaría una segunda inscripción en la misma categoría.
+     */
+    private suspend fun marcarInscriptas(resultado: ResultadoOpciones.Disponibles): ResultadoOpciones.Disponibles {
+        val tomadas = reservas.observarInscripciones().firstOrNull().orEmpty()
+            .filter { it.torneoCodigo == torneoCodigo && it.estado != EstadoInscripcion.NO_FIGURA }
+            .associate { it.categoria to it.estado }
+        if (tomadas.isEmpty()) return resultado
+        return ResultadoOpciones.Disponibles(
+            resultado.opciones.map { opcion ->
+                when (tomadas[opcion.categoria]) {
+                    EstadoInscripcion.RESERVADA -> opcion.copy(habilitada = false, motivo = MOTIVO_YA_RESERVADA)
+                    EstadoInscripcion.LISTA_ESPERA -> opcion.copy(habilitada = false, motivo = MOTIVO_YA_EN_ESPERA)
+                    else -> opcion
+                }
+            },
+        )
     }
 
     private fun mostrarOpciones(resultado: ResultadoOpciones.Disponibles) {
@@ -186,6 +208,9 @@ class ReservaViewModel(
         private const val CLAVE_SELECCIONADA = "reserva.seleccionada"
         private const val CLAVE_CONDICIONES = "reserva.condiciones"
         private const val CLAVE_PENDIENTE = "reserva.pendiente"
+
+        const val MOTIVO_YA_RESERVADA = "Ya tenés lugar reservado en esta categoría."
+        const val MOTIVO_YA_EN_ESPERA = "Ya estás en la lista de espera de esta categoría."
 
         val Factory = viewModelFactory {
             initializer {

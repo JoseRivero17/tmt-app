@@ -89,7 +89,11 @@ class LoginViewModel(
             initializer {
                 val app = this[APPLICATION_KEY] as TMTApplication
                 LoginViewModel(
-                    IniciarSesion(app.container.sesionRepository, app.container.jugadorRepository),
+                    IniciarSesion(
+                        app.container.sesionRepository,
+                        app.container.jugadorRepository,
+                        app.container.reservaRepository,
+                    ),
                     modoDemo = !BuildConfig.SITIO_REAL,
                 )
             }

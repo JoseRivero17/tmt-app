@@ -68,6 +68,8 @@ class ReservaRepositoryImpl(
     override fun observarInscripciones(): Flow<List<Inscripcion>> =
         dao.observarTodas().map { lista -> lista.map { it.aDominio() } }
 
+    override suspend fun olvidarInscripciones() = dao.borrarTodas()
+
     /** Si Room falla, la reserva en el sitio igual se hizo: se informa el resultado del sitio. */
     private suspend fun registrar(torneoCodigo: Int, categoria: String, estado: EstadoInscripcion) {
         try {

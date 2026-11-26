@@ -112,5 +112,7 @@ class ReservarLugarTest {
         }
 
         override fun observarInscripciones(): Flow<List<Inscripcion>> = emptyFlow()
+
+        override suspend fun olvidarInscripciones() = Unit
     }
 }

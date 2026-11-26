@@ -14,4 +14,7 @@ interface InscripcionDao {
 
     @Upsert
     suspend fun guardar(inscripcion: InscripcionEntity)
+
+    @Query("DELETE FROM inscripciones")
+    suspend fun borrarTodas()
 }

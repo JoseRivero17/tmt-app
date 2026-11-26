@@ -1,7 +1,11 @@
 package com.uade.tmt.presentation.login
 
+import com.uade.tmt.domain.model.Inscripcion
 import com.uade.tmt.domain.model.ResultadoLogin
+import com.uade.tmt.domain.model.ResultadoOpciones
+import com.uade.tmt.domain.model.ResultadoReserva
 import com.uade.tmt.domain.model.SesionJugador
+import com.uade.tmt.domain.repository.ReservaRepository
 import com.uade.tmt.domain.repository.SesionRepository
 import com.uade.tmt.domain.usecase.IniciarSesion
 import com.uade.tmt.domain.usecase.JugadoresFalsos
@@ -9,7 +13,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.emptyFlow
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -28,7 +34,7 @@ class LoginViewModelTest {
     fun cerrar() = scope.cancel()
 
     private fun viewModel(modoDemo: Boolean = true) =
-        LoginViewModel(IniciarSesion(sesiones, jugadores), modoDemo, scope)
+        LoginViewModel(IniciarSesion(sesiones, jugadores, RegistroVacio()), modoDemo, scope)
 
     @Test
     fun `login exitoso marca exito, borra la clave y deja la sesion`() {
@@ -121,6 +127,13 @@ class LoginViewModelTest {
     fun `el modo demo llega al estado`() {
         assertTrue(viewModel(modoDemo = true).uiState.value.modoDemo)
         assertFalse(viewModel(modoDemo = false).uiState.value.modoDemo)
+    }
+
+    private class RegistroVacio : ReservaRepository {
+        override suspend fun obtenerOpciones(torneoCodigo: Int) = ResultadoOpciones.ErrorSitio
+        override suspend fun reservar(torneoCodigo: Int, categoria: String) = ResultadoReserva.ErrorSitio
+        override fun observarInscripciones(): Flow<List<Inscripcion>> = emptyFlow()
+        override suspend fun olvidarInscripciones() = Unit
     }
 
     private class SesionesFalsas : SesionRepository {
