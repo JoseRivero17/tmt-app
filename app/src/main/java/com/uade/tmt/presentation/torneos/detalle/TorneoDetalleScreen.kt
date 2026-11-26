@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -53,6 +55,7 @@ import com.uade.tmt.presentation.torneos.larga
 @Composable
 fun TorneoDetalleScreen(
     onVolver: () -> Unit,
+    onInscribirme: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: TorneoDetalleViewModel = viewModel(factory = TorneoDetalleViewModel.Factory),
 ) {
@@ -65,6 +68,7 @@ fun TorneoDetalleScreen(
         estado = estado,
         onVolver = onVolver,
         onActualizar = { viewModel.actualizar(forzar = true) },
+        onInscribirme = onInscribirme,
         modifier = modifier,
     )
 }
@@ -75,6 +79,7 @@ private fun TorneoDetalleContent(
     estado: TorneoDetalleUiState,
     onVolver: () -> Unit,
     onActualizar: () -> Unit,
+    onInscribirme: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
@@ -113,7 +118,7 @@ private fun TorneoDetalleContent(
                     onRefresh = onActualizar,
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    DatosTorneo(estado.torneo)
+                    DatosTorneo(estado.torneo, onInscribirme)
                 }
             }
         }
@@ -121,7 +126,7 @@ private fun TorneoDetalleContent(
 }
 
 @Composable
-private fun DatosTorneo(torneo: Torneo) {
+private fun DatosTorneo(torneo: Torneo, onInscribirme: (Int) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -143,6 +148,15 @@ private fun DatosTorneo(torneo: Torneo) {
                 text = torneo.sede?.let { listOfNotNull(it, torneo.direccion).joinToString("\n") } ?: torneo.localidad,
                 style = MaterialTheme.typography.bodyLarge,
             )
+        }
+
+        if (torneo.admiteReserva) {
+            Button(
+                onClick = { onInscribirme(torneo.codigo) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = 48.dp),
+            ) { Text(stringResource(R.string.torneos_inscribirme)) }
         }
 
         if (torneo.cancelado) {
@@ -226,6 +240,7 @@ private fun TorneoDetallePreview() {
                 estado = TorneoDetalleUiState.Contenido(TorneoDePrueba, null, false, MotivoFallo.TIMEOUT, false),
                 onVolver = {},
                 onActualizar = {},
+                onInscribirme = {},
             )
         }
     }
