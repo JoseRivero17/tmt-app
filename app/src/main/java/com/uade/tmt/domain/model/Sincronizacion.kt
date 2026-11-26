@@ -15,6 +15,9 @@ data class Recurso(val clave: String, val intervaloMinimo: Duration) {
 
         /** El ranking se pide por división: la página sin filtro tarda más que el timeout de RNF03. */
         fun ranking(division: String) = Recurso("ranking:$division", Duration.ofDays(1))
+
+        /** Ficha de un jugador (hoy, solo la del perfil propio). Cambia con cada corte de ranking. */
+        fun ficha(codigo: Int) = Recurso("ficha:$codigo", Duration.ofDays(1))
     }
 }
 

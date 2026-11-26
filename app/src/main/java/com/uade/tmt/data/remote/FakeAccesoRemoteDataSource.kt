@@ -6,7 +6,8 @@ import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Acceso inventado para desarrollar el RF02 sin cuenta en el sitio. Acepta solo el jugador de
- * demostración [CODIGO_DEMO] / [CLAVE_DEMO], que no existen en el sitio real.
+ * demostración [CODIGO_DEMO] / [CLAVE_DEMO]. La clave es inventada, pero el código existe en el
+ * sitio: al ingresar, Mi TMT muestra la ficha pública de ese jugador como perfil propio.
  */
 class FakeAccesoRemoteDataSource(
     private val demora: Duration = 600.milliseconds,

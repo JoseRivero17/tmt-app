@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -20,13 +19,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -44,7 +39,7 @@ import com.uade.tmt.presentation.components.LoadingState
 import com.uade.tmt.presentation.theme.TMTTheme
 import java.time.Instant
 
-/** Ficha de un jugador (RF03): datos del ranking y botones para seguirlo o marcarlo como propio. */
+/** Ficha de un jugador (RF03): datos del ranking y botón para seguirlo. El perfil propio sale del login. */
 @Composable
 fun FichaJugadorScreen(
     onVolver: () -> Unit,
@@ -56,8 +51,6 @@ fun FichaJugadorScreen(
         estado = estado,
         onVolver = onVolver,
         onSeguir = viewModel::alternarSeguir,
-        onMarcarPropio = viewModel::marcarComoPropio,
-        onQuitarPropio = viewModel::quitarPropio,
         modifier = modifier,
     )
 }
@@ -68,8 +61,6 @@ private fun FichaJugadorContent(
     estado: FichaUiState,
     onVolver: () -> Unit,
     onSeguir: () -> Unit,
-    onMarcarPropio: () -> Unit,
-    onQuitarPropio: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxSize()) {
@@ -90,7 +81,7 @@ private fun FichaJugadorContent(
                 estado.jugador.actualizadoEn?.let {
                     LastUpdatedBanner(lastUpdatedMillis = it.toEpochMilli())
                 }
-                DatosJugador(estado, onSeguir, onMarcarPropio, onQuitarPropio)
+                DatosJugador(estado, onSeguir)
             }
         }
     }
@@ -100,13 +91,9 @@ private fun FichaJugadorContent(
 private fun DatosJugador(
     estado: FichaUiState.Contenido,
     onSeguir: () -> Unit,
-    onMarcarPropio: () -> Unit,
-    onQuitarPropio: () -> Unit,
 ) {
     val jugador = estado.jugador
-    val otroPropio = estado.otroPropio
     val sinDato = stringResource(R.string.ficha_sin_dato)
-    var confirmarCambio by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -145,7 +132,14 @@ private fun DatosJugador(
             Dato(stringResource(R.string.ficha_club), jugador.club ?: sinDato)
         }
 
-        if (estado.seguido) {
+        // El perfil propio lo define la sesión: no se sigue ni se deja de seguir desde acá.
+        if (estado.esPropio) {
+            Text(
+                text = stringResource(R.string.ficha_perfil_por_sesion),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        } else if (estado.seguido) {
             OutlinedButton(
                 onClick = onSeguir,
                 modifier = Modifier
@@ -160,44 +154,6 @@ private fun DatosJugador(
                     .heightIn(min = 48.dp),
             ) { Text(stringResource(R.string.ficha_seguir)) }
         }
-
-        if (estado.esPropio) {
-            TextButton(
-                onClick = onQuitarPropio,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(min = 48.dp),
-            ) { Text(stringResource(R.string.ficha_no_es_propio)) }
-        } else {
-            TextButton(
-                // Si ya hay otro perfil, primero se pide confirmación.
-                onClick = { if (otroPropio != null) confirmarCambio = true else onMarcarPropio() },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(min = 48.dp),
-            ) { Text(stringResource(R.string.ficha_es_propio)) }
-        }
-    }
-
-    if (confirmarCambio && otroPropio != null) {
-        AlertDialog(
-            onDismissRequest = { confirmarCambio = false },
-            title = { Text(stringResource(R.string.ficha_cambiar_perfil_titulo)) },
-            text = { Text(stringResource(R.string.ficha_cambiar_perfil_texto, otroPropio, jugador.nombre)) },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        confirmarCambio = false
-                        onMarcarPropio()
-                    },
-                ) { Text(stringResource(R.string.ficha_cambiar_perfil_si)) }
-            },
-            dismissButton = {
-                TextButton(onClick = { confirmarCambio = false }) {
-                    Text(stringResource(R.string.ficha_cambiar_perfil_no))
-                }
-            },
-        )
     }
 }
 
@@ -241,8 +197,6 @@ private fun FichaPreview() {
                 ),
                 onVolver = {},
                 onSeguir = {},
-                onMarcarPropio = {},
-                onQuitarPropio = {},
             )
         }
     }

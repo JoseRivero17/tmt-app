@@ -3,6 +3,8 @@ package com.uade.tmt.presentation.login
 import com.uade.tmt.domain.model.ResultadoLogin
 import com.uade.tmt.domain.model.SesionJugador
 import com.uade.tmt.domain.repository.SesionRepository
+import com.uade.tmt.domain.usecase.IniciarSesion
+import com.uade.tmt.domain.usecase.JugadoresFalsos
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -20,11 +22,13 @@ class LoginViewModelTest {
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Unconfined)
     private val sesiones = SesionesFalsas()
+    private val jugadores = JugadoresFalsos()
 
     @After
     fun cerrar() = scope.cancel()
 
-    private fun viewModel(modoDemo: Boolean = true) = LoginViewModel(sesiones, modoDemo, scope)
+    private fun viewModel(modoDemo: Boolean = true) =
+        LoginViewModel(IniciarSesion(sesiones, jugadores), modoDemo, scope)
 
     @Test
     fun `login exitoso marca exito, borra la clave y deja la sesion`() {
@@ -42,6 +46,8 @@ class LoginViewModelTest {
         assertEquals("", estado.clave)
         assertEquals(listOf("12345" to "demo"), sesiones.intentos)
         assertEquals(SesionJugador("12345", "Jugador Demo"), sesiones.sesion.value)
+        // RF03: quien inicia sesión queda como perfil propio.
+        assertEquals(12345, jugadores.perfilPropio)
     }
 
     @Test

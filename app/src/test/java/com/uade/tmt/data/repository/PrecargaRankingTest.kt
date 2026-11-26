@@ -99,4 +99,7 @@ private class JugadorDaoFake : JugadorDao {
     override fun observarSeguidos(): Flow<List<JugadorSeguido>> = emptyFlow()
     override suspend fun seguir(seguido: SeguidoEntity) = Unit
     override suspend fun dejarDeSeguir(codigo: Int) = Unit
+    override suspend fun buscarPorCodigo(codigo: Int): JugadorEntity? = null
+    override fun observarCodigoPropio(): Flow<Int?> = emptyFlow()
+    override suspend fun quitarPropio() = Unit
 }
