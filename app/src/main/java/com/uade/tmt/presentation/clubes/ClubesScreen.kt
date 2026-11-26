@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -45,6 +46,9 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -236,6 +240,19 @@ private fun ListaClubes(
     onActualizar: () -> Unit,
     onClubClick: (Int, String?) -> Unit,
 ) {
+    // Si cambia el orden (llegó la ubicación) o la búsqueda, la lista vuelve al principio: si no,
+    // queda en el club que estaba arriba y el más cercano queda fuera de la pantalla (criterio 1).
+    // Se guarda el último orden visto para no perder la posición al volver del detalle.
+    val listState = rememberLazyListState()
+    val orden = "${estado.ordenadosPorDistancia}|${estado.busqueda}"
+    var ordenVisto by rememberSaveable { mutableStateOf(orden) }
+    LaunchedEffect(orden) {
+        if (orden != ordenVisto) {
+            listState.scrollToItem(0)
+            ordenVisto = orden
+        }
+    }
+
     Column(modifier = Modifier.fillMaxSize()) {
         if (estado.acceso == AccesoUbicacion.RECHAZADO) {
             AvisoSinPermiso(onAbrirAjustes)
@@ -269,6 +286,7 @@ private fun ListaClubes(
             modifier = Modifier.fillMaxSize(),
         ) {
             LazyColumn(
+                state = listState,
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(bottom = 16.dp),
             ) {

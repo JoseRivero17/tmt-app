@@ -126,7 +126,7 @@ private fun ClubDetalleContent(
                     onRefresh = onActualizar,
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    DatosClub(estado.club, estado.distancia, onComoLlegar, onLlamar)
+                    DatosClub(estado, onComoLlegar, onLlamar)
                 }
             }
         }
@@ -135,11 +135,12 @@ private fun ClubDetalleContent(
 
 @Composable
 private fun DatosClub(
-    club: Club,
-    distancia: String?,
+    estado: ClubDetalleUiState.Contenido,
     onComoLlegar: (Club) -> Unit,
     onLlamar: (Club) -> Unit,
 ) {
+    val club = estado.club
+    val distancia = estado.distancia
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -168,7 +169,14 @@ private fun DatosClub(
         val direccion = listOfNotNull(club.direccion, club.localidad).joinToString(" · ")
         Renglon(R.drawable.ic_clubes) {
             Text(
-                text = club.direccion?.let { direccion } ?: stringResource(R.string.clubes_detalle_sin_direccion),
+                text = when {
+                    club.direccion != null -> direccion
+                    // La dirección viene en la ficha: si todavía no se bajó, no es que el sitio no la tenga.
+                    estado.actualizadoEn == null && estado.actualizando ->
+                        stringResource(R.string.clubes_detalle_buscando_ficha)
+                    estado.actualizadoEn == null -> stringResource(R.string.clubes_detalle_sin_ficha)
+                    else -> stringResource(R.string.clubes_detalle_sin_direccion)
+                },
                 style = MaterialTheme.typography.bodyLarge,
             )
         }

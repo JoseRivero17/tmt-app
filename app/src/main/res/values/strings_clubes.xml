@@ -33,6 +33,8 @@
     <string name="clubes_llamar">Llamar</string>
     <string name="clubes_detalle_contacto">Contacto</string>
     <string name="clubes_detalle_sin_direccion">El sitio no publica la dirección de este club.</string>
+    <string name="clubes_detalle_buscando_ficha">Buscando la dirección y el contacto…</string>
+    <string name="clubes_detalle_sin_ficha">Conectate a internet para ver la dirección y el contacto del club.</string>
     <string name="clubes_sin_app_mapas">No encontramos una app para abrir el mapa.</string>
     <string name="clubes_sin_app_telefono">No encontramos una app para llamar.</string>
 </resources>
