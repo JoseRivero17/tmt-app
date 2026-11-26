@@ -3,6 +3,7 @@ package com.uade.tmt.di
 import android.content.Context
 import com.uade.tmt.BuildConfig
 import com.uade.tmt.data.local.AppDatabase
+import com.uade.tmt.data.platform.UbicacionAndroid
 import com.uade.tmt.data.remote.AccesoRemoteDataSource
 import com.uade.tmt.data.remote.AccesoService
 import com.uade.tmt.data.remote.ConectividadAndroid
@@ -28,6 +29,7 @@ import com.uade.tmt.domain.repository.JugadorRepository
 import com.uade.tmt.domain.repository.ReservaRepository
 import com.uade.tmt.domain.repository.SesionRepository
 import com.uade.tmt.domain.repository.TorneoRepository
+import com.uade.tmt.domain.repository.UbicacionProvider
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
@@ -46,6 +48,7 @@ interface AppContainer {
     val sesionRepository: SesionRepository
     val reservaRepository: ReservaRepository
     val conectividad: Conectividad
+    val ubicacion: UbicacionProvider
 }
 
 /**
@@ -138,6 +141,9 @@ class DefaultAppContainer(
     }
 
     override val conectividad: Conectividad by lazy { ConectividadAndroid(context) }
+
+    /** RF04: lectura puntual de la ubicación aproximada; no se guarda (RNF07). */
+    override val ubicacion: UbicacionProvider by lazy { UbicacionAndroid(context) }
 
     private companion object {
         const val BASE_URL = "https://tenisdemesaparatodos.com/"
