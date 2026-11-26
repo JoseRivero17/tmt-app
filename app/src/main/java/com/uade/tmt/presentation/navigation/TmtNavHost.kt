@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.uade.tmt.presentation.clubes.ClubesScreen
+import com.uade.tmt.presentation.clubes.detalle.ClubDetalleScreen
 import com.uade.tmt.presentation.login.LoginScreen
 import com.uade.tmt.presentation.perfil.PerfilScreen
 import com.uade.tmt.presentation.ranking.RankingScreen
@@ -45,8 +46,13 @@ fun TmtNavHost(
             }
         }
         composable<Ranking> { RankingScreen() }
-        // El detalle del club se suma en el próximo commit.
-        composable<Clubes> { ClubesScreen(onClubClick = { _, _ -> }) }
+        // Igual que Torneos: la pestaña sigue marcada en el detalle y la lista conserva su estado.
+        navigation<Clubes>(startDestination = ClubesLista) {
+            composable<ClubesLista> {
+                ClubesScreen(onClubClick = { codigo, distancia -> navController.navigate(ClubDetalle(codigo, distancia)) })
+            }
+            composable<ClubDetalle> { ClubDetalleScreen(onVolver = navController::popBackStack) }
+        }
         composable<Perfil> { PerfilScreen(onIniciarSesion = { navController.navigate(Login) }) }
         composable<Login> {
             LoginScreen(
