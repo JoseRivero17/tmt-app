@@ -9,6 +9,7 @@ import androidx.navigation.compose.navigation
 import com.uade.tmt.presentation.clubes.ClubesScreen
 import com.uade.tmt.presentation.login.LoginScreen
 import com.uade.tmt.presentation.perfil.PerfilScreen
+import com.uade.tmt.presentation.ranking.FichaJugadorScreen
 import com.uade.tmt.presentation.ranking.RankingScreen
 import com.uade.tmt.presentation.reserva.ReservaScreen
 import com.uade.tmt.presentation.torneos.TorneosScreen
@@ -44,7 +45,16 @@ fun TmtNavHost(
                 )
             }
         }
-        composable<Ranking> { RankingScreen() }
+
+        navigation<Ranking>(startDestination = RankingLista) {
+            composable<RankingLista> {
+                RankingScreen(onJugadorClick = { navController.navigate(JugadorFicha(it)) })
+            }
+            composable<JugadorFicha> {
+                FichaJugadorScreen(onVolver = navController::popBackStack)
+            }
+        }
+
         composable<Clubes> { ClubesScreen() }
         composable<Perfil> { PerfilScreen(onIniciarSesion = { navController.navigate(Login) }) }
         composable<Login> {

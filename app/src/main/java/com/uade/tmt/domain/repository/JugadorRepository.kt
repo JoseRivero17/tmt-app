@@ -23,5 +23,12 @@ interface JugadorRepository {
 
     suspend fun dejarDeSeguir(codigo: Int)
 
+    /** Baja los primeros 100 jugadores de la división. */
     suspend fun sincronizarRanking(division: String, forzar: Boolean = false): ResultadoSync
+
+    /**
+     * Baja los primeros 100 de cada división, para poder buscar sin conexión. Tarda cerca de un
+     * minuto o dos: se guarda división por división y la próxima vez solo se piden las que faltaron.
+     */
+    suspend fun precargarRanking(): ResultadoSync
 }
