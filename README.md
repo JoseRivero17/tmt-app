@@ -70,12 +70,15 @@ ni Room, ni el parser, así que un cambio en el HTML del sitio solo afecta a `da
 ## RF03 – Ranking, búsqueda y seguidos
 
 - Ranking por división (1ra a 8va) y búsqueda por nombre o código desde 3 caracteres, sin distinguir tildes ni mayúsculas.
-- Ficha del jugador con división, puesto, rating y club. Desde la ficha se puede seguir a un jugador y marcarlo como perfil propio ("Este soy yo"); solo puede haber un perfil propio y cambiarlo pide confirmación.
+- Ficha del jugador con división, puesto, rating y club. Desde la ficha se puede seguir a un jugador.
+- Perfil propio: como en el sitio, es el del jugador que inició sesión (RF02); no se elige a mano. Su ficha se baja por código, así que aparece aunque no esté entre los primeros 100 de su división, y se ve en Mi TMT y primera en "Seguidos". Al cerrar sesión se quita.
 - Pestaña "Seguidos": muestra los jugadores seguidos y el perfil propio con la fecha de su última actualización. Sale de lo guardado, así que funciona sin conexión.
 
 **Limitaciones y decisiones**
 
-- Solo se encuentran los primeros 100 jugadores de cada división, y la búsqueda muestra hasta 100 resultados.
+- Solo se encuentran los primeros 100 jugadores de cada división (más el perfil propio), y la búsqueda muestra hasta 100 resultados.
+- La ficha del sitio publica la posición en el ranking general, no dentro de la división: no se mezcla con el puesto por división del ranking, así que el perfil propio fuera de los 100 primeros se ve sin puesto.
+- En modo demo (`SITIO_REAL = false`) el login es simulado, pero el código 12345 existe en el sitio: Mi TMT muestra la ficha pública de ese jugador.
 - El ranking se pide siempre por división: la página sin filtro tarda más que el timeout de 15 s.
 - El club se ve abreviado hasta que esté RF04.
 - No se muestran los últimos torneos del jugador: requieren leer otra página del sitio y quedaron fuera de esta entrega.
