@@ -6,6 +6,7 @@ import com.uade.tmt.domain.model.ResultadoOpciones
 import com.uade.tmt.domain.model.ResultadoReserva
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -29,6 +30,30 @@ class InscripcionParserTest {
             ),
             InscripcionParser.opciones(formulario),
         )
+    }
+
+    @Test
+    fun `los campos del envio son los de la fila mas las dos casillas aceptadas`() {
+        assertEquals(
+            mapOf(
+                "categoria_cod" to "19",
+                "categoria" to "4ta",
+                "torneo_fecha" to "20261128",
+                "torneo_cod" to "11035",
+                "localidad" to "VILLA MARTELLI",
+                "horario" to "16:00 hs.",
+                "consentimiento" to "1",
+                "chkResp" to "on",
+                "chkDDJJ" to "on",
+            ),
+            InscripcionParser.camposEnvio(formulario, "4ta"),
+        )
+    }
+
+    @Test
+    fun `una categoria no habilitada o que no figura no tiene campos de envio`() {
+        assertNull(InscripcionParser.camposEnvio(formulario, "6ta"))
+        assertNull(InscripcionParser.camposEnvio(formulario, "1ra"))
     }
 
     @Test

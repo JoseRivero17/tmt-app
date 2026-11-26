@@ -39,6 +39,7 @@
     <string name="reserva_resultado_reservada">Lugar reservado</string>
     <string name="reserva_resultado_reservada_detalle">Categoría %1$s</string>
     <string name="reserva_resultado_reservada_detalle_horario">Categoría %1$s · %2$s h</string>
+    <string name="reserva_envio_simulado">Inscripción simulada: la app no la envía al sitio, así que el organizador no la recibe.</string>
     <string name="reserva_resultado_espera">Quedaste en lista de espera</string>
     <string name="reserva_resultado_espera_detalle">Categoría %1$s. Si se libera un lugar, el organizador te avisa.</string>
     <string name="reserva_resultado_sin_conexion">No hay conexión a internet. La inscripción no se envió.</string>

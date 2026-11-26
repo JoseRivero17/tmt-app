@@ -46,6 +46,9 @@ interface AppContainer {
     val sesionRepository: SesionRepository
     val reservaRepository: ReservaRepository
     val conectividad: Conectividad
+
+    /** RF02: las inscripciones no llegan al sitio (modo demo, o sitio real sin el envío final). */
+    val inscripcionesSimuladas: Boolean
 }
 
 /**
@@ -132,6 +135,12 @@ class DefaultAppContainer(
             FakeInscripcionRemoteDataSource(torneoRepository)
         }
     }
+
+    /**
+     * Hoy siempre: en modo demo todo es inventado y con el sitio real se valida todo pero no se manda
+     * el POST final (ver [SitioInscripcionRemoteDataSource]).
+     */
+    override val inscripcionesSimuladas: Boolean = true
 
     override val reservaRepository: ReservaRepository by lazy {
         ReservaRepositoryImpl(inscripcion, database.inscripcionDao(), conectividad)

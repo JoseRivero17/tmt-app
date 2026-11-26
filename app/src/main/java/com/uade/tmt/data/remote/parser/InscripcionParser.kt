@@ -21,6 +21,16 @@ object InscripcionParser {
     /** Las categorías habilitadas tienen este botón; abre el formulario en un popup. */
     private const val BOTON_INSCRIBIRME = "input[type=button][onclick*=jugadores_inscripcionesForm.asp]"
 
+    /** Campos ocultos de cada fila que el popup copia a su formulario antes de enviarlo. */
+    private val CAMPOS_FILA = listOf("categoria_cod", "categoria", "torneo_fecha", "torneo_cod", "localidad", "horario")
+
+    /**
+     * Lo que el popup agrega: el consentimiento y las dos casillas que el jugador tilda (compartir
+     * sus datos con el organizador y el deslinde de responsabilidad). En la app equivalen a
+     * "Acepto las condiciones", que [com.uade.tmt.domain.usecase.ReservarLugar] exige antes de enviar.
+     */
+    private val CAMPOS_ACEPTACION = mapOf("consentimiento" to "1", "chkResp" to "on", "chkDDJJ" to "on")
+
     /**
      * `true` si el sitio devolvió una pantalla que pide iniciar sesión. Reutiliza [AccesoParser]:
      * cualquier estado que no sea [EstadoAcceso.Exito] significa que no hay sesión válida.
@@ -46,6 +56,21 @@ object InscripcionParser {
         val filas = Jsoup.parse(html).select(CAMPO_CATEGORIA).mapNotNull { it.closest("tr") }.distinct()
         if (filas.isEmpty()) throw LecturaException("El formulario de inscripción no tiene categorías")
         return ResultadoOpciones.Disponibles(filas.map(::opcion))
+    }
+
+    /**
+     * Campos del POST a `jugadores_inscripciones_paso2.asp` para [categoria], tal como los arma el
+     * popup del sitio. `null` si la categoría no figura o no está habilitada.
+     */
+    fun camposEnvio(html: String, categoria: String): Map<String, String>? {
+        val fila = Jsoup.parse(html).select(CAMPO_CATEGORIA)
+            .firstOrNull { it.attr("value").limpio() == categoria }?.closest("tr") ?: return null
+        if (fila.selectFirst(BOTON_INSCRIBIRME) == null) return null
+        val campos = CAMPOS_FILA.associateWith { nombre ->
+            fila.selectFirst("input[name=$nombre]")?.attr("value")
+                ?: throw LecturaException("A la categoría $categoria le falta el campo $nombre")
+        }
+        return campos + CAMPOS_ACEPTACION
     }
 
     private fun opcion(fila: Element): OpcionInscripcion {

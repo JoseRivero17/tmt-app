@@ -22,6 +22,8 @@ data class ReservaUiState(
     val pendiente: Pendiente? = null,
     /** Evento de un solo uso: la UI navega al login y llama a `loginAbierto()`. */
     val irALogin: Boolean = false,
+    /** La inscripción no llega al sitio: el resultado lo aclara para que nadie crea que el club la recibió. */
+    val envioSimulado: Boolean = false,
 ) {
     val opcionElegida: OpcionInscripcion? get() = opciones.find { it.categoria == seleccionada }
 
