@@ -2,12 +2,14 @@ package com.uade.tmt.data.mapper
 
 import com.uade.tmt.data.local.entity.CategoriaTorneoEntity
 import com.uade.tmt.data.local.entity.ClubEntity
+import com.uade.tmt.data.local.entity.InscripcionEntity
 import com.uade.tmt.data.local.entity.JugadorEntity
 import com.uade.tmt.data.local.entity.JugadorSeguido
 import com.uade.tmt.data.local.entity.TorneoConCategorias
 import com.uade.tmt.data.local.entity.TorneoEntity
 import com.uade.tmt.domain.model.CategoriaTorneo
 import com.uade.tmt.domain.model.Club
+import com.uade.tmt.domain.model.Inscripcion
 import com.uade.tmt.domain.model.Jugador
 import com.uade.tmt.domain.model.Seguido
 import com.uade.tmt.domain.model.Torneo
@@ -104,4 +106,11 @@ fun ClubEntity.aDominio() = Club(
     mail = mail,
     latitud = latitud,
     longitud = longitud,
+)
+
+fun InscripcionEntity.aDominio() = Inscripcion(
+    torneoCodigo = torneoCodigo,
+    categoria = categoria,
+    estado = estado,
+    registradaEn = registradaEn,
 )

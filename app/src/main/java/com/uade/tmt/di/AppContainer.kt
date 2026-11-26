@@ -8,18 +8,24 @@ import com.uade.tmt.data.remote.AccesoService
 import com.uade.tmt.data.remote.ConectividadAndroid
 import com.uade.tmt.data.remote.CookieJarEnMemoria
 import com.uade.tmt.data.remote.FakeAccesoRemoteDataSource
+import com.uade.tmt.data.remote.FakeInscripcionRemoteDataSource
+import com.uade.tmt.data.remote.InscripcionRemoteDataSource
+import com.uade.tmt.data.remote.InscripcionService
 import com.uade.tmt.data.remote.SitioAccesoRemoteDataSource
+import com.uade.tmt.data.remote.SitioInscripcionRemoteDataSource
 import com.uade.tmt.data.remote.SitioRemoteDataSource
 import com.uade.tmt.data.remote.SitioService
 import com.uade.tmt.data.remote.TmtRemoteDataSource
 import com.uade.tmt.data.repository.ClubRepositoryImpl
 import com.uade.tmt.data.repository.JugadorRepositoryImpl
+import com.uade.tmt.data.repository.ReservaRepositoryImpl
 import com.uade.tmt.data.repository.SesionRepositoryImpl
 import com.uade.tmt.data.repository.Sincronizador
 import com.uade.tmt.data.repository.TorneoRepositoryImpl
 import com.uade.tmt.domain.repository.ClubRepository
 import com.uade.tmt.domain.repository.Conectividad
 import com.uade.tmt.domain.repository.JugadorRepository
+import com.uade.tmt.domain.repository.ReservaRepository
 import com.uade.tmt.domain.repository.SesionRepository
 import com.uade.tmt.domain.repository.TorneoRepository
 import okhttp3.OkHttpClient
@@ -38,6 +44,7 @@ interface AppContainer {
     val jugadorRepository: JugadorRepository
     val clubRepository: ClubRepository
     val sesionRepository: SesionRepository
+    val reservaRepository: ReservaRepository
     val conectividad: Conectividad
 }
 
@@ -116,6 +123,19 @@ class DefaultAppContainer(
     }
 
     override val sesionRepository: SesionRepository by lazy { SesionRepositoryImpl(acceso) }
+
+    /** RF02: igual que el acceso. La fuente falsa arma las opciones con los torneos guardados. */
+    private val inscripcion: InscripcionRemoteDataSource by lazy {
+        if (BuildConfig.SITIO_REAL) {
+            SitioInscripcionRemoteDataSource(retrofit.create(InscripcionService::class.java))
+        } else {
+            FakeInscripcionRemoteDataSource(torneoRepository)
+        }
+    }
+
+    override val reservaRepository: ReservaRepository by lazy {
+        ReservaRepositoryImpl(inscripcion, database.inscripcionDao(), conectividad)
+    }
 
     override val conectividad: Conectividad by lazy { ConectividadAndroid(context) }
 
