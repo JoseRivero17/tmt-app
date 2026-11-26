@@ -2,4 +2,11 @@
 <resources>
 
     <style name="Theme.TMT" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <!-- Splash: el logo completo sobre el azul del encabezado de Inicio, en claro y en oscuro. -->
+    <style name="Theme.TMT.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/splash_fondo</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.TMT</item>
+    </style>
 </resources>
