@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Mi TMT: la ficha de quien inició sesión (RF02 + RF03) -->
+    <string name="perfil_codigo">Código %1$s</string>
+    <string name="perfil_club">Club %1$s</string>
+    <string name="perfil_bajando_ficha">Bajando tu ficha del sitio…</string>
+</resources>
