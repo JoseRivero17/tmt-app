@@ -7,6 +7,7 @@ import com.uade.tmt.data.remote.AccesoRemoteDataSource
 import com.uade.tmt.data.remote.AccesoService
 import com.uade.tmt.data.remote.ConectividadAndroid
 import com.uade.tmt.data.remote.CookieJarEnMemoria
+import com.uade.tmt.data.remote.DemoRemoteDataSource
 import com.uade.tmt.data.remote.FakeAccesoRemoteDataSource
 import com.uade.tmt.data.remote.FakeInscripcionRemoteDataSource
 import com.uade.tmt.data.remote.InscripcionRemoteDataSource
@@ -109,8 +110,10 @@ class DefaultAppContainer(
 
     private val sincronizador: Sincronizador by lazy { Sincronizador(database.syncInfoDao()) }
 
+    /** Datos públicos del sitio. En modo demo, la ficha del jugador de demostración es inventada. */
     private val remoto: TmtRemoteDataSource by lazy {
-        SitioRemoteDataSource(retrofit.create(SitioService::class.java))
+        val sitio = SitioRemoteDataSource(retrofit.create(SitioService::class.java))
+        if (BuildConfig.SITIO_REAL) sitio else DemoRemoteDataSource(sitio)
     }
 
     override val torneoRepository: TorneoRepository by lazy {

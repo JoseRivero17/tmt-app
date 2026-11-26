@@ -78,7 +78,7 @@ ni Room, ni el parser, así que un cambio en el HTML del sitio solo afecta a `da
 
 - Solo se encuentran los primeros 100 jugadores de cada división (más el perfil propio), y la búsqueda muestra hasta 100 resultados.
 - La ficha del sitio publica la posición en el ranking general, no dentro de la división: no se mezcla con el puesto por división del ranking, así que el perfil propio fuera de los 100 primeros se ve sin puesto.
-- En modo demo (`SITIO_REAL = false`) el login es simulado, pero el código 12345 existe en el sitio: Mi TMT muestra la ficha pública de ese jugador.
+- Modo demo (`SITIO_REAL = false`): el login, la inscripción y el jugador de demostración (código 99999, clave demo) son inventados, porque probar contra el sitio haría inscripciones reales. Todo lo demás (calendario, torneos, ranking y fichas) se lee del sitio real.
 - El ranking se pide siempre por división: la página sin filtro tarda más que el timeout de 15 s.
 - El club se ve abreviado hasta que esté RF04.
 - No se muestran los últimos torneos del jugador: requieren leer otra página del sitio y quedaron fuera de esta entrega.

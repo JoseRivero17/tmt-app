@@ -252,14 +252,13 @@ private fun PerfilPreview() {
         Surface {
             PerfilContent(
                 estado = PerfilUiState(
-                    sesion = SesionJugador("12345", "Jugador Demo"),
+                    sesion = SesionJugador("99999", "Jugador Demo"),
                     ficha = Jugador(
-                        codigo = 12345,
-                        nombre = "Jugador de Muestra",
-                        division = "7ma",
+                        codigo = 99999,
+                        nombre = "Jugador Demo",
+                        division = "6ta",
                         puesto = null,
-                        rating = 1000,
-                        club = "CMU",
+                        rating = 1300,
                         actualizadoEn = Instant.EPOCH,
                     ),
                     inscripciones = listOf(

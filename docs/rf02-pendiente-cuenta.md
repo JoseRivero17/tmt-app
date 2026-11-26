@@ -30,7 +30,7 @@ el jugador realmente quiera anotarse o que se pueda dar de baja.
 Antes de agregarlas al repo (las muestras actuales usan "misma estructura que el sitio, con nombres inventados"):
 
 1. Reemplazar nombre, apellido, código de jugador, DNI, mail, teléfono y rating por valores inventados
-   (por ejemplo `Jugador Demo`, código `12345`). Buscar también en atributos `value=` y en URLs.
+   (por ejemplo `Jugador Demo`, código `99999`). Buscar también en atributos `value=` y en URLs.
 2. Borrar cualquier `value=` de campos `clave`/`password` y cualquier token de sesión, `ASPSESSIONID…`,
    o parámetro oculto que identifique la sesión.
 3. Quitar `<script>` de analítica o de terceros que no hagan falta para la estructura.
