@@ -19,8 +19,8 @@ import kotlin.coroutines.resume
 /**
  * Ubicación con el Fused Location Provider de Google Play services (RF04).
  *
- * RNF07 y RNF12: una sola lectura de precisión aproximada, en primer plano y sin seguimiento
- * continuo. El resultado no se guarda: vive en el ViewModel mientras la pantalla está abierta.
+ * RNF07 y RNF12: una sola lectura, que llega aproximada por el permiso, en primer plano y sin
+ * seguimiento continuo. El resultado no se guarda: vive en el ViewModel mientras la pantalla está abierta.
  */
 class UbicacionAndroid(private val context: Context) : UbicacionProvider {
 
@@ -44,8 +44,12 @@ class UbicacionAndroid(private val context: Context) : UbicacionProvider {
     @SuppressLint("MissingPermission") // Verificado en tienePermiso().
     private suspend fun lecturaActual(): Ubicacion? {
         val cancelacion = CancellationTokenSource()
+        // Alta precisión para que el sistema pueda usar el GPS si no hay ubicación por Wi-Fi o red
+        // (pasa en el emulador y en lugares sin Wi-Fi). Como la app solo tiene el permiso
+        // aproximado, el resultado llega igual aproximado (RNF07). Es una sola lectura y se corta
+        // a los 10 s, así que el GPS no queda encendido (RNF12).
         return cliente
-            .getCurrentLocation(Priority.PRIORITY_BALANCED_POWER_ACCURACY, cancelacion.token)
+            .getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, cancelacion.token)
             .leer(onCancelar = cancelacion::cancel)
     }
 
