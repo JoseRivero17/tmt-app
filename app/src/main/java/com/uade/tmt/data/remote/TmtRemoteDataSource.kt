@@ -15,6 +15,9 @@ interface TmtRemoteDataSource {
     suspend fun torneo(codigo: Int): Torneo
     suspend fun ranking(division: String): List<Jugador>
     suspend fun clubes(): List<Club>
+
+    /** Ficha de un club: suma dirección y contacto a lo que trae [clubes]. */
+    suspend fun club(codigo: Int): Club
 }
 
 /** La respuesta llegó, pero no tiene la estructura esperada. */
