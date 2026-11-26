@@ -20,10 +20,13 @@ object AccesoParser {
 
     /**
      * Barra azul del encabezado, presente en todas las páginas del sitio. Sin ella la página no se
-     * considera del sitio (ni legible ni exitosa).
-     * TODO(cuenta): con sesión iniciada el encabezado puede cambiar; validar con una página real.
+     * considera del sitio (ni legible ni exitosa). Sin sesión tiene el formulario de código y clave;
+     * con sesión, "Bienvenido <nombre> | Acceder a mi panel de control | Salir" (visto con una
+     * cuenta real, test/resources/html/loginExitoso.html).
      */
     private const val BARRA_SUPERIOR = "table[background*=columna_barra2]"
+    private const val ENLACE_SALIR = "a[href*=salir.asp]"
+    private const val ENLACE_PROPIA_FICHA = "a[href*=jugadores_ficha.asp]"
     private const val TITULO_SECCION = "td.TituloSecciones"
     private const val CAJA_MENSAJE = "td[bgcolor=#FFFFCA]"
     private const val CAMPO_CLAVE = "input[name=clave], input[type=password]"
@@ -47,12 +50,12 @@ object AccesoParser {
         }
         if (barra.selectFirst(CAMPO_CLAVE) != null) return EstadoAcceso.SinSesion
 
-        // TODO(cuenta): regla conservadora, sin página real de login exitoso. Validarla y leer el
-        // nombre del jugador del encabezado.
-        if (pagina.selectFirst(CAMPO_CLAVE) != null || pagina.selectFirst(CAJA_MENSAJE) != null) {
-            throw LecturaException("Página con campo de clave o mensaje fuera de la pantalla de acceso")
+        // Con sesión la barra ofrece "Salir" y el nombre enlaza a la ficha del jugador.
+        if (barra.selectFirst(ENLACE_SALIR) != null) {
+            val nombre = barra.selectFirst(ENLACE_PROPIA_FICHA)?.text()?.limpio()?.ifEmpty { null }
+            return EstadoAcceso.Exito(nombre)
         }
-        return EstadoAcceso.Exito(nombre = null)
+        throw LecturaException("La barra no tiene ni el formulario de acceso ni el enlace para salir")
     }
 
     /** Pantalla "ACCESO DE JUGADORES": el mensaje en la caja amarilla dice qué pasó. */
