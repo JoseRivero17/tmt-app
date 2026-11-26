@@ -61,6 +61,20 @@ ni Room, ni el parser, así que un cambio en el HTML del sitio solo afecta a `da
 **Pull requests**: de `feature/*` a `develop`, con descripción de qué cambia y cómo se probó.
 `develop` se mergea a `main` en cada entrega.
 
+## RF04 — Clubes cercanos
+
+| Qué | Cómo |
+|---|---|
+| Datos | `clubes_mapaTodos.asp` trae los ~210 clubes con sus coordenadas en un solo pedido (`ClubesParser`). La ficha `clubes_ampliar.asp` suma dirección y teléfono al abrir un club (`ClubParser`). Todo se guarda en Room y se actualiza cada 7 días (RNF05). |
+| Ubicación | Permiso `ACCESS_COARSE_LOCATION` pedido recién al entrar a Clubes, con explicación previa. Una sola lectura con el Fused Location Provider; no se guarda (RNF07, RNF12). |
+| Distancia | Haversine en el dominio (`OrdenarClubesPorCercania`), con las coordenadas guardadas: funciona sin conexión. |
+| Permiso rechazado | La función sigue con la búsqueda por localidad o nombre (`BuscarClubes`) y un acceso a Ajustes. |
+| Cómo llegar | Intent `geo:` con las coordenadas del club; si no hay app de mapas, Google Maps en el navegador. "Llamar" usa `ACTION_DIAL` (sin permisos). |
+
+**Fuera de alcance (decisión):** clubes precargados en la app, mapa embebido, filtro "Abiertos hoy",
+WhatsApp, compartir, horarios, mesas y próximos torneos del club. Sin conexión y sin una
+sincronización previa se muestra el estado "Sin conexión" con reintentar.
+
 ## Ejecución
 
 1. Clonar el repo y abrirlo con Android Studio.

@@ -1,0 +1,610 @@
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>TMT - Tenis de Mesa para Todos - Torneos de ping pong - Adrogue Sith Spin</title>
+  <meta http-equiv="" content="text/html; charset=iso-8859-1">
+  <link href="estilos.css" rel="stylesheet" type="text/css">
+  <LINK REL="SHORTCUT ICON" HREF="/favicon.ico" type="image/x-icon">
+<META NAME="DC.Language" SCHEME="RFC1766" CONTENT="Spanish">
+<META NAME="AUTHOR" CONTENT="Tenis de Mesa para Todos">
+<META NAME="DESCRIPTION" CONTENT="Torneos de Ping Pong para todos los niveles y edades. Dónde jugar al Ping Pong en Argentina. Tenis de Mesa para Todos">
+<META NAME="KEYWORDS" CONTENT="ping pong tenis de mesa table tennis torneos ranking aprender a jugar noticias de tenis de mesa joola donic butterfly stiga andro paletas reglamento historia jugadores donde practicar clubes foro de tenis de mesa">
+<META NAME="Resource-type" CONTENT="Document">
+<META NAME="Revisit-after" CONTENT="1 days">
+<META NAME="robots" content="ALL">
+
+<script language="javascript">
+function abrirpopup(nombre,ancho,alto) {
+vtop = (screen.width-ancho)/2;
+vleft = (screen.height-alto)/2;
+dat = 'width=' + ancho + ',height=' + alto + ',left=' + 0 + ',top=' + 0 + ',resizable=no,scrollbars=yes,status=no';
+window.open(nombre,'',dat)
+}
+
+function obfuscateEmail(link) {
+    var email = link.href.replace("mailto:", "");
+    var obfuscated = "";
+
+    for (var i = 0; i < email.length; i++) {
+    obfuscated += "&#" + email.charCodeAt(i) + ";";
+    }
+
+    link.href = "mailto:" + obfuscated;
+}
+</script>
+
+<script type="text/javascript"> //<![CDATA[ 
+var tlJsHost = ((window.location.protocol == "https:") ? "https://secure.comodo.com/" : "http://www.trustlogo.com/");
+document.write(unescape("%3Cscript src='" + tlJsHost + "trustlogo/javascript/trustlogo.js' type='text/javascript'%3E%3C/script%3E"));
+//]]>
+</script>
+
+
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=CLAVE_DE_MUESTRA&callback=initialize&language=es&region=AR"></script>
+  <script type="text/javascript" src="javascript/map_functions.js" ></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js" integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==" crossorigin=""></script>
+  <script type="text/javascript">
+
+    var map;
+
+    function initialize() {
+      var lat = -34.796361;
+      var lon =  -58.386436; 
+      /*var map = createMap(lat, lon, 16);
+
+      addMarker(map, lat, lon,81, "Adrogue Sith Spin", ' - Pcia. de Gran Buenos Aires', 'ADROGUE', false, 'clubes');*/
+	  
+	  var map = L.map('map_canvas').setView([lat, lon], 16);
+
+	  // Cargar la capa oficial del Instituto Geográfico Nacional de Argentina
+	  L.tileLayer('https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG%3A3857@png/{z}/{x}/{-y}.png', {
+		attribution: '&copy; <a href="http://www.ign.gob.ar">IGN Argentina</a>'
+	  }).addTo(map);
+
+	  // Agregar el marcador (equivalente a tu función addMarker)
+	  L.marker([lat, lon]).addTo(map)
+		.bindPopup('<b>Adrogue Sith Spin</b><br>ADROGUE,  - Pcia. de Gran Buenos Aires');
+    }
+    
+  </script>	
+
+  
+
+</head>
+
+<body onload="initialize()" >
+  <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><div align="center"><table height="100%" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" class="TablaMadre">
+        <tr>
+          <td valign="top">
+            <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td height="79"><script language="javascript">
+function enviarFormulario() {
+	document.getElementById('vformulario').submit();
+}
+</script>
+
+
+
+
+
+
+<table width="100%"  border="0" cellpadding="0" cellspacing="0" background="imagenes/cabezal_fondo.gif">
+  <tr>
+    <td width="197"><a href="inicio.asp"><img src="imagenes/cabezal_logo.gif" width="197" height="90" border="0"></a></td>
+	<td align="right"><a href="http://www.dhs-argentina.com.ar" target="_blank" style="display: block; padding-top:4px"><img src="imagenes/banners/Logo_federacion.jpeg?a" width="790" height="86" border="0" alt="Donic"></a>
+	</td>
+    <td width="11"><img src="imagenes/cabezal_fin.gif" width="11" height="90" border="0"></td>
+  </tr>
+</table>
+<script language="javascript1.2" type="text/javascript" src="fadesBanners.js"></script>
+<script language="javascript1.2" type="text/javascript">
+var contenidos = [
+
+];
+hacerFades(contenidos, "bannersCabezal", 100, 50, 15000);
+</script>
+<table width="100%"  border="0" cellpadding="0" cellspacing="0" background="imagenes/columna_barra2.gif">
+  <tr>
+    <td width="10"><a href="inicio.asp"><img src="imagenes/columna_barra1.gif" width="10" height="29" border="0"></a></td>
+    <td style="padding-top: 1px; ">
+      <table width="100%" height="28"  border="0" cellpadding="0" cellspacing="0" style="font-size: 12px; color:#FFFFFF; ">
+        <form method="post" action="jugadores_acceso_paso2.asp?accion=ingresar&accesoURL=clubes_ampliar.asp?codigo=81" id="vformulario">
+      <tr>
+        <td width="1" nowrap>C&oacute;digo:</td>
+        <td width="1" nowrap style="padding-left: 3px; "><input name="codigo" type="text" id="codigo25" size="4" class="campo"></td>
+        <td width="1" nowrap style="padding-left: 8px; ">          Clave:</td>
+        <td width="1" nowrap style="padding-left: 3px; "><input name="clave" type="password" id="clave25" size="4" class="campo"></td>
+        <td width="1" nowrap><input name="recordar" type="checkbox" id="recordar" value="si"></td>
+        <td width="1" nowrap><label for="recordar">Recordar</label></td>
+        <td width="1" nowrap style="padding-left: 8px; "><a href="javascript:enviarFormulario();"><img src="imagenes/boton_ingresar2.gif" width="30" height="19" hspace="0" vspace="0" border="0"></a></td>
+        <td style="padding-left: 8px; "> <a href="jugadores_acceso.asp?accion=recuperar&recup=paso1" class="linkBlanco">Olvid&eacute; mi clave</a> <span style="color:white; font-size:8pt; padding-left:420px;">Jugadores del Circuito: </span></td>
+        <td nowrap></td>
+      </tr></form>
+    </table>
+    </td>
+    <td width="10"><img src="imagenes/columna_barra3.gif" width="10" height="29" border="0"></td>
+  </tr>
+</table>
+</td>
+              </tr>
+              <tr>
+                <td height="1" bgcolor="#FFFFFF"></td>
+              </tr>
+              <tr>
+                <td valign="top"><table width="100%" height="100%"  border="0" cellpadding="0" cellspacing="0">
+                  <tr valign="top">
+                    <td width="133" background="imagenes/columna_fondo1.gif"><table width="133" height="100%"  border="0" cellpadding="0" cellspacing="0">
+  <tr><td height="1"><img src="imagenes/columna_top1.gif" width="133" height="12"></td></tr>
+  <tr>
+    <td valign="top" style="padding-left: 2px; padding-right:2px; ">                    
+      <table width="100%"  border="0" cellspacing="1" cellpadding="0">
+
+        <tr>
+          <td id="menuTitulo">EMPEZ&Aacute; A JUGAR</td>
+        </tr>
+        <tr>
+          <td id="menuOpcion"><a href="jugadores_alta.asp"><strong><font color="#FFcc00">Registrate Ahora</font></strong></a></td>
+        </tr>
+		<tr>
+          <td id="menuOpcion"><a href="clubes.asp"><strong><font color="#FFcc00">D&oacute;nde Practicar</font></strong></a></td>
+        </tr>
+		<tr>
+          <td id="menuOpcion"><a href="clubes_mapaTodos.asp">Mapa Interactivo </a></td>
+        </tr>
+        <tr>
+          <td height="5"></td>
+        </tr>
+        <tr>
+          <td id="menuTitulo">TORNEOS</td>
+        </tr>
+		<tr>
+          <td id="menuOpcion"><a href="comoparticipar.asp"><strong><font color="#FFcc00">C&oacute;mo Participar</font></strong></a></td>
+        </tr>
+		<tr>
+          <td id="menuOpcion"><a href="divisiones.asp">Divisiones</a></td>
+        </tr>
+        <tr>
+          <td id="menuOpcion"><a href="calendario.asp"><strong><font color="#FF9900">Calendario</font></strong></a></td>
+        </tr>
+		<tr>
+          <td id="menuOpcion"><a href="torneos.asp">Resultados</a></td>
+        </tr>
+		<tr>
+          <td id="menuOpcion"><a href="reglamentoTMT.asp">Reglamento</a></td>
+        </tr>
+        <tr>
+          <td height="5"></td>
+        </tr>
+        <tr>
+          <td id="menuTitulo">CIRCUITO TMT</td>
+        </tr>
+        <tr>
+          <td id="menuOpcion"><a href="ranking.asp"><font color="#FF9900"><strong>Ranking Jugadores</strong></font></a></td>
+        </tr>
+		<tr>
+          <td id="menuOpcion"><a href="rankingClubes.asp">Ranking Clubes</a></td>
+        </tr>
+		<tr>
+          <td id="menuOpcion"><a href="rankingVariacion.asp">Ranking Mensual de Clubes</a></td>
+        </tr>
+        <tr>
+          <td id="menuOpcion"><a href="jugadores.asp">Buscar Jugador</a></td>
+        </tr>
+        <tr>
+          <td id="menuOpcion"><a href="partidos_headtohead.asp">Head to Head </a></td>
+        </tr>
+		<tr>
+          <td id="menuOpcion"><a href="calculopuntaje.asp">C&aacute;lculo de Puntaje</a></td>
+        </tr>
+		<tr>
+          <td id="menuOpcion"><a href="noticias.asp">Noticias</a></td>
+        </tr>
+        <tr>
+          <td height="5"></td>
+        </tr>
+        <!--<tr>
+          <td id="menuTitulo">INTERESCUELAS</td>
+        </tr>
+        <tr>
+          <td id="menuOpcion">
+            <a href="https://www.tenisdemesaparatodos.com/interescuelas/Interescuelas2019_Tabla.pdf" target="_blank">Ranking</a>
+          </td>
+        </tr>
+		<tr>
+          <td id="menuOpcion"><a href="interescuelas_requisitos.asp">Requisitos</a></td>
+        </tr>
+		<tr>
+          <td id="menuOpcion"><a href="archivos/ReglamentoInterescuelas2018.pdf" target="_blank">Reglamento</a></td>
+        </tr>
+        <tr>
+          <td height="5"></td>
+        </tr>-->
+        <tr>
+          <td id="menuTitulo">CONTACTO</td>
+        </tr>
+        <tr>
+          <td id="menuOpcion"><a href="sumatuclub.asp">Sum&aacute; Tu Club</a></td>
+        </tr>
+        <tr>
+          <td id="menuOpcion"><a href="contacto.asp">Contacto</a></td>
+        </tr>
+        <tr>
+          <td height="5"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+</td>
+                    <td style="padding-left: 1px; padding-right: 1px; "><table width="100%" height="100%"  border="0" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td valign="top"><table width="100%"  border="0" cellpadding="0" cellspacing="0">
+                          <tr valign="top">
+                            <td width="50%"><table width="100%"  border="0" cellpadding="0" cellspacing="0">
+                              <tr>
+                                <td><div align="center">
+                                  <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                      <td class="TituloSecciones"><div align="center">CLUBES ADHERIDOS </div></td>
+                                    </tr>
+                                  </table>
+                                </div></td>
+                              </tr>
+                              <tr>
+                                <td><table width="100%"  border="0" cellpadding="0" cellspacing="0">
+                                  <tr>
+                                    <td style="padding: 2px;"><div align="center">
+                                      <table width="100%"  border="0" cellspacing="1" cellpadding="0">
+                                        <tr>
+                                          <td bgcolor="#f4f4f4" style="padding: 5px; "><a href="clubes.asp" class="linkAzul">Buscar otro club </a></td>
+                                        </tr>
+                                        <tr>
+                                          <td height="1" valign="middle" bgcolor="#CCCCCC"></td>
+                                        </tr>
+                                        <tr valign="top">
+                                          <td><table width="100%"  border="0" cellspacing="3" cellpadding="0">
+                                            <tr>
+                                              <td style="font-size:18px; font-weight:bold ">
+                                                <table width="100%"  border="0" cellspacing="3" cellpadding="0">
+                                                  <tr>
+                                                    <td><table width="100%"  border="0" cellspacing="0" cellpadding="0" style="font-size:22px;">
+                                                      <tr>
+                                                        <td style="border-right: 1px dotted #000; ">Adrogue Sith Spin</td>
+                                                        <td width="10" nowrap style="padding-left: 5px; "><div align="right">
+                                                          <table  border="0" align="center" cellpadding="0" cellspacing="3" style="color:#666;">
+                                                            <tr>
+                                                              <td nowrap style="font-size:11px "><div align="left">Abr.</div></td>
+                                                              <td style="font-size:22px;">ASS</td>
+                                                            </tr>
+                                                          </table>
+                                                        </div></td>
+                                                      </tr>
+                                                    </table></td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td height="1" background="imagenes/linea_02.gif"></td>
+                                                  </tr>
+                                                  <tr>
+                                                    <td><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                                      <tr valign="top">
+                                                        <td><table width="100%"  border="0" align="center" cellpadding="0" cellspacing="4" style="font-size:12px; ">
+                                                          <tr valign="middle">
+                                                            <td nowrap style="padding-right: 5px; ">Direcci&oacute;n:</td>
+                                                            <td><strong>Bynnon 1649 (entre Drumond y plaza bynon)</strong></td>
+                                                          </tr>
+                                                          <tr valign="middle">
+                                                            <td nowrap style="padding-right: 5px; ">&nbsp;</td>
+                                                            <td>ADROGUE - Pcia. de Gran Buenos Aires</td>
+                                                          </tr>
+                                                          <tr valign="middle">
+                                                            <td height="1" colspan="2" nowrap background="imagenes/linea_03.gif" style="padding-right: 5px; "></td>
+                                                          </tr>
+                                                          
+                                                          <tr valign="middle">
+                                                            <td nowrap style="padding-right: 5px; ">Entrenadores:</td>
+                                                            <td>
+                                                              <table width="100%"  border="0" cellspacing="0" cellpadding="0" style="font-size:12px; ">
+                                                                <tr>
+                                                                  <td><strong>Entrenador Demo</strong></td>
+                                                                </tr>
+                                                                
+                                                              </table></td>
+                                                            </tr>
+                                                            <tr valign="middle">
+                                                              <td height="1" colspan="2" nowrap background="imagenes/linea_03.gif" style="padding-right: 5px; "></td>
+                                                            </tr>
+                                                            
+                                                            <tr valign="middle">
+                                                              <td nowrap style="padding-right: 5px; ">Contacto:</td>
+                                                              <td><strong>Contacto Demo</strong> </td>
+                                                            </tr>
+                                                            <tr valign="middle">
+                                                              <td nowrap style="padding-right: 5px; ">&nbsp;</td>
+                                                              <td>1100000000 | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="">[email&#160;protected]</a></td>
+                                                            </tr>
+                                                            
+                                                            <tr valign="middle">
+                                                              <td height="1" colspan="2" nowrap background="imagenes/linea_03.gif" style="padding-right: 5px; "></td>
+                                                            </tr>
+                                                            
+                                                            <tr valign="middle">
+                                                              <td width="10%" nowrap style="padding-right: 5px; ">Horarios:</td>
+                                                              <td>Lunes y Jueves de 18 a 22 horas. </td>
+                                                            </tr>
+                                                            <tr valign="middle" background="imagenes/linea_03.gif">
+                                                              <td height="1" colspan="2" style="padding-right: 5px; "></td>
+                                                            </tr>
+                                                            
+                                                            <tr valign="middle">
+                                                              <td width="10%" nowrap style="padding-right: 5px; ">Mesas:</td>
+                                                              <td>8</td>
+                                                            </tr>
+                                                            <tr valign="middle">
+                                                              <td height="1" colspan="2" nowrap background="imagenes/linea_03.gif" style="padding-right: 5px; "></td>
+                                                            </tr>
+                                                            
+                                                            <tr>
+                                                              <td width="5%" nowrap style="font-size:12px;">Asociaci&oacute;n:</td>
+                                                              <td nowrap style="font-size:12px; ">
+                                                                <a href="asociaciones_ampliar.asp?codigo=1" class="linkAzul"> <strong>FeTeMBA</strong></a> <img src="imagenes/escudos/asociaciones/FTM.gif" width="30" hspace="0" vspace="0" border="0" align="absmiddle">
+                                                              </td>
+                                                            </tr>
+                                                            
+                                                            <tr valign="middle">
+                                                              <td height="1" colspan="2" nowrap background="imagenes/linea_03.gif" style="padding-right: 5px; "></td>
+                                                            </tr>
+                                                            <tr valign="middle">
+                                                              <td rowspan="2" width="10%" nowrap style="padding-left: 10px; "><img src="imagenes/logo_adaptados.png" alt="logo_adaptados" height="50px"</td>
+                                                              <td>Accesos adaptados: SI <br/>
+                                                                Baños adaptados: SI <br/>
+                                                                Mesas adaptadas: SI <br/></td>
+                                                              </tr>
+                                                              
+                                                          </table></td>
+                                                          <td width="120" style="padding-left: 20px; "><div align="center"> <img src="imagenes/escudos/ASS_grande.gif" width="120"> </div></td>
+                                                        </tr>
+                                                      </table></td>
+                                                    </tr>
+                                                  </table></td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                  <td height="1" background="imagenes/linea_02.gif"></td>
+                                                </tr>
+                                                <tr>
+                                                  <td bgcolor="#D4E9FF" style="padding: 5px; "><strong>INFORMACI&Oacute;N ADICIONAL </strong></td>
+                                                </tr>
+                                                <tr>
+                                                  <td style="padding: 2px; "><table width="100%"  border="0" align="center" cellpadding="0" cellspacing="5">
+                                                    <tr>
+                                                      <td style="font-size:14px;">Gimnasio de 10 mts. x 30 de largo y altura 10 mts</td>
+                                                    </tr>
+                                                  </table></td>
+                                                </tr>
+                                                
+                                                <tr>
+                                                  <td height="1" background="imagenes/linea_02.gif"></td>
+                                                </tr>
+                                                <tr>
+                                                  <td bgcolor="#D4E9FF" style="padding: 5px; "><strong>MAPA</strong></td>
+                                                </tr>
+                                                <tr>
+                                                  <td style="padding: 2px; "><table width="100%"  border="0" align="center" cellpadding="0" cellspacing="5">
+                                                    <tr>
+                                                      <td nowrap><div id="map_canvas" style="width: 100%; height: 300px"></div><div style="padding: 10px 0 10px 0; font-size:14px; "><a href="clubes_mapaTodos.asp" class="linkAzul">Ver mapa completo con todos los clubes</a></div></td>
+                                                    </tr>
+                                                    
+                                                    <tr>
+                                                      <td style="color:#FF0000; font-size:12px; "><strong>Como llegar:</strong> Transporte publico: tren Roca(ramal glew-est.adrogue) o (ramal varela-est.marmol) colectivos lineas 79-74-160 que pasan por avda Espora mano acapital o provincia(a dos cuadras de esta avenida) colectivos internos de adrogue 506-384-514-318-406-501</td>
+                                                    </tr>
+                                                    
+                                                  </table></td>
+                                                </tr>
+                                                
+
+                                                <tr>
+                                                  <td height="1" background="imagenes/linea_02.gif"></td>
+                                                </tr>
+                                                <tr>
+                                                  <td bgcolor="#D4E9FF" style="padding: 5px; "><strong>JUGADORES Y ESTADISTICAS </strong></td>
+                                                </tr>
+                                                <tr>
+                                                  <td><table width="100%"  border="0" align="center" cellpadding="0" cellspacing="4">
+                                                    <tr valign="middle">
+                                                      <td width="10%" nowrap style="padding-right: 5px; "><div align="left">Total de jugadores:</div></td>
+                                                      <td nowrap style="padding-right: 5px; "><div align="left"><strong>1</strong></div></td>
+                                                    </tr>
+                                                    <tr valign="middle" background="imagenes/linea_03.gif">
+                                                      <td height="1" colspan="2" style="padding-right: 5px; "></td>
+                                                    </tr>
+                                                    <tr valign="middle">
+                                                      <td nowrap style="padding-right: 5px; "><div align="left">Edad Promedio:<strong> </strong></div></td>
+                                                      <td nowrap style="padding-right: 5px; "><div align="left"><strong>63 a&ntilde;os</strong></div></td>
+                                                    </tr>
+                                                    <tr valign="middle" background="imagenes/linea_03.gif">
+                                                      <td height="1" colspan="2" style="padding-right: 5px; "></td>
+                                                    </tr>
+                                                    <tr valign="middle">
+                                                      <td nowrap style="padding-right: 5px; "><div align="left">Rating total del club:</div></td>
+                                                      <td nowrap style="padding-right: 5px; "><div align="left"><strong>1133 puntos</strong></div></td>
+                                                    </tr>
+                                                    <tr valign="middle" background="imagenes/linea_03.gif">
+                                                      <td height="1" colspan="2" style="padding-right: 5px; "></td>
+                                                    </tr>
+													<td nowrap style="padding-right: 5px; "><div align="left">Variación respecto al rating anterior:</div></td>
+                                                      <td nowrap style="padding-right: 5px; "><div align="left"><strong>0 puntos</strong></div></td>
+                                                    </tr>
+                                                    <tr valign="middle" background="imagenes/linea_03.gif">
+                                                      <td height="1" colspan="2" style="padding-right: 5px; "></td>
+                                                    </tr>
+                                                    <tr valign="middle">
+                                                      <td nowrap style="padding-right: 5px; "><div align="left">Promedio por jugador:<strong> </strong></div></td>
+                                                      <td nowrap style="padding-right: 5px; "><div align="left"><strong>1133 puntos</strong></div></td>
+                                                    </tr>
+													<tr valign="middle">
+                                                      <td height="1" colspan="2" nowrap background="imagenes/linea_03.gif" style="padding-right: 5px; "></td>
+                                                    </tr>
+                                                    <tr valign="middle">
+                                                      <td nowrap style="padding-right: 5px; "><div align="left">Última actualización:<strong> </strong></div></td>
+                                                      <td nowrap style="padding-right: 5px; "><div align="left"><strong>24/11/2026</strong></div></td>
+                                                    </tr>
+                                                    <tr valign="middle">
+                                                      <td height="1" colspan="2" nowrap background="imagenes/linea_03.gif" style="padding-right: 5px; "></td>
+                                                    </tr>
+                                                    <tr valign="middle">
+                                                      <td colspan="2" style="padding-right: 5px; "><table width="100%"  border="0" cellpadding="0" cellspacing="3">
+                                                        <tr bgcolor="#FFFFFF" style="font-size:10px; padding:2px; ">
+                                                          <td width="1%" style="padding-left: 2px; padding-right: 2px; "><div align="center"><strong>#</strong></div></td>
+														  <td width="1%" style="padding-left: 2px; padding-right: 2px; "><div align="center"><strong>C&oacute;digo</strong></div></td>
+                                                          <td style="padding-left: 2px; padding-right: 2px; "><div align="center"><strong>Jugador</strong></div></td>
+                                                          <td width="10%" style="padding-left: 2px; padding-right: 2px; "><div align="center"><strong>Cat.</strong></div></td>
+                                                          <td width="10%" style="padding-left: 2px; padding-right: 2px; "><div align="center"><strong>Rating</strong></div></td>
+                                                          <td width="10%" style="padding-left: 2px; padding-right: 2px; "><div align="center"><strong>Edad</strong></div></td>
+                                                        </tr>
+                                                        <tr bgcolor="#000000" style="font-size:10px; padding:2px; ">
+                                                          <td height="1" colspan="5"></td>
+                                                        </tr>
+                                                        
+                                                            <tr bgcolor="#FFFFFF">
+                                                              <td style="padding-right: 3px; font-size:10px "><div align="center">1</div></td>
+															  <td style="padding-right: 3px; font-size:10px "><div align="center">12345</div></td>
+                                                              <td><a href="jugadores_ficha.asp?codigo=12345" class="linkAzul">Jugador, Demo</a>
+                                                                </td>
+                                                                <td nowrap><div align="center"><img src="imagenes/icono_puesto_6ta.gif" width="29" height="16"></div></td>
+                                                                <td nowrap><div align="center">1133</div></td>
+                                                                <td nowrap><div align="center">63</div></td>
+                                                              </tr>
+                                                              <tr bgcolor="#CCCCCC" style="font-size:10px; padding:2px; ">
+                                                                <td height="1" colspan="5"></td>
+                                                              </tr>
+                                                              
+                                                            </table></td>
+                                                          </tr>
+                                                        </table></td>
+                                                      </tr>
+                                                      
+                                                    </table></td>
+                                                  </tr>
+                                                </table>
+                                              </div></td>
+                                            </tr>
+                                          </table>
+                                        </td>
+                                      </tr>
+                                    </table>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </table></td>
+                        <td width="133" background="imagenes/columna_fondo2b.gif"><table width="133" height="100%"  border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td height="1"><img src="imagenes/columna_top2b.gif" width="212" height="12"></td>
+                </tr>
+                <tr>
+                  <td valign="top" style="padding: 0 5px 5px 5px; "><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                    
+					
+					
+					
+					
+                    <tr>
+						<td style="padding:0 10px 5px 10px; "><a href="https://www.dhs-argentina.com.ar" target="_blank" onclick="trackOutboundLink('https://www.dhs-argentina.com.ar'); return false;"><img src="imagenes/banners/banner-dhs.jpg" width="180" height="250" border="0" alt=""></a></td>
+                    </tr>
+					<tr><td style="padding:0 10px 10px 10px; "></td></tr>
+					<tr>
+						<td style="padding:0 10px 5px 10px; "><a href="https://cho-lei.com/" target="_blank" onclick="trackOutboundLink('https://cho-lei.com/'); return false;"><img src="imagenes/banners/BANNER-choLei.jpg" width="180" height="250" border="0" alt=""></a></td>
+                    </tr>
+                    <!--<tr>-->
+                    <!--  <td style="padding:0 10px 5px 10px; "><a href="mailto:estudioleto@yahoo.com.ar" target="_blank"><img src="imagenes/banners/estudio_leto.png" width="182" height="331" border="0"></a></td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                    <!--  <td style="padding:0 10px 5px 10px; "><a href="http://www.androargentina.com.ar/" target="_blank"><img src="imagenes/banners/publi_andro3.gif" width="182" height="126" border="0"></a></td>-->
+                    <!--</tr>-->
+                    <!--<tr>-->
+                    <!--  <td style="padding:0 10px 5px 10px; "><a href="http://www.oncecero.com/" target="_blank"><img src="imagenes/banners/publi_oncecero5.gif" width="182" height="126" border="0"></a></td>-->
+                    <!--</tr>-->
+					
+
+					
+                  </table></td>
+                </tr>
+</table>
+</td>
+                      </tr>
+                    </table></td>
+                  </tr>
+                  <tr>
+                    <td valign="top"><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="133" valign="bottom" background="imagenes/columna_fondo1.gif"><img src="imagenes/columna_fin1.gif" width="133" height="12"></td>
+    <td style="padding: 0 1px 0 1px; "><table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                          <tr><td height="1" bgcolor="#003399"></td></tr>
+                          <tr>
+                            <td background="imagenes/fondo_celeste.gif"><div align="right">
+                              <table width="100%"  border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                  <td width="250" style="font-size:10px;padding:15px 10px"><div><strong>Tenis de Mesa para Todos &copy; 2004-2026</strong></div>Todos los derechos reservados</td>
+                                  <td width="200">
+								  <table>
+									<tbody><tr>
+										<td><a href="https://www.facebook.com/TenisdeMesaparaTodosTMT/" target="_blank" style="margin-right:5px"><img src="imagenes/iconos/icono-fb.png" alt="facebook" width="34" height="34"></a></td>
+										<td><a href="https://www.instagram.com/tenisdemesaparatodos/" target="_blank" style="margin-right:5px"><img src="imagenes/iconos/icono-ig.png" alt="instagram" width="34" height="34"></a></td>
+										<td valign="middle"><a href="/cdn-cgi/l/email-protection" class="contact-link" style="line-height: 12px;" onclick="javascript:obfuscateEmail(this);"><img src="imagenes/iconos/icono-email.png" alt="" width="34" height="34" style="vertical-align: middle;"><div style="margin-left:5px;display: inline;"><span class="__cf_email__" data-cfemail="">[email&#160;protected]</span></div></a></td>
+										
+									</tr>
+								  </tbody></table>
+								   
+								  </td>
+                                </tr>
+                              </table>
+                            </div></td>
+                          </tr>
+                        </table>
+</td>
+    <td width="133" valign="bottom" background="imagenes/columna_fondo2b.gif"><img src="imagenes/columna_fin2b.gif" width="212" height="12"></td>
+  </tr>
+</table>
+</td>
+                  </tr>
+                </table></td>
+              </tr>
+            </table>
+          </div></td>
+        </tr>
+      </table>
+      <!-- Global site tag (gtag.js) - Google Analytics -->
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script async src="https://www.googletagmanager.com/gtag/js?id=UA-144940390-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+ 
+  gtag('config', 'UA-144940390-1');
+</script>
+<script>
+/**
+* FunciÃ³n que realiza un seguimiento de un clic en un enlace saliente en Analytics.
+* Esta funciÃ³n toma una cadena de URL vÃ¡lida como argumento y la utiliza
+* como la etiqueta del evento. Configurar el mÃ©todo de transporte como "beacon" permite que el hit se envÃ­e
+* con "navigator.sendBeacon" en el navegador que lo admita.
+*/
+var trackOutboundLink = function(url) {
+  gtag('event', 'clic', {
+    'event_category': 'saliente',
+    'event_label': url,
+    'transport_type': 'beacon',
+    'event_callback': function(){window.open(url);}
+  });
+}
+</script>
+    <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+    </html>

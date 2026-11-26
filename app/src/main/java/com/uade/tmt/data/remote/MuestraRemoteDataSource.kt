@@ -59,4 +59,7 @@ class MuestraRemoteDataSource(private val clock: Clock = Clock.systemDefaultZone
         Club(2, "Otro Club", "Avenida Ficticia 456", "LANUS", latitud = -34.7002, longitud = -58.3920),
         Club(3, "Club sin ubicación", "Ruta Imaginaria 789", "LA PLATA"),
     )
+
+    override suspend fun club(codigo: Int): Club =
+        clubes().firstOrNull { it.codigo == codigo } ?: throw LecturaException("No existe el club $codigo")
 }

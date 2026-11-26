@@ -18,6 +18,9 @@ interface TmtRemoteDataSource {
     /** Ficha de un jugador, esté o no entre los primeros 100 de su división. Sin puesto. */
     suspend fun ficha(codigo: Int): Jugador
     suspend fun clubes(): List<Club>
+
+    /** Ficha de un club: suma dirección y contacto a lo que trae [clubes]. */
+    suspend fun club(codigo: Int): Club
 }
 
 /** La respuesta llegó, pero no tiene la estructura esperada. */

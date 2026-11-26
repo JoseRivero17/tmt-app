@@ -18,4 +18,11 @@ interface SitioService {
 
     @GET("jugadores_ficha.asp")
     suspend fun ficha(@Query("codigo") codigo: Int): String
+
+    /** RF04: todos los clubes con sus coordenadas, en una sola página. */
+    @GET("clubes_mapaTodos.asp")
+    suspend fun clubes(): String
+
+    @GET("clubes_ampliar.asp")
+    suspend fun club(@Query("codigo") codigo: Int): String
 }

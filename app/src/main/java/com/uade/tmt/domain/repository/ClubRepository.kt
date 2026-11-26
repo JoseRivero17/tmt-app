@@ -13,5 +13,11 @@ interface ClubRepository {
 
     fun observarActualizacion(): Flow<Instant?>
 
+    /** Fecha en que se bajó la ficha del club, o null si todavía no se bajó. */
+    fun observarActualizacionClub(codigo: Int): Flow<Instant?>
+
     suspend fun sincronizar(forzar: Boolean = false): ResultadoSync
+
+    /** Baja la ficha del club (dirección y contacto) y la guarda. */
+    suspend fun sincronizarClub(codigo: Int, forzar: Boolean = false): ResultadoSync
 }

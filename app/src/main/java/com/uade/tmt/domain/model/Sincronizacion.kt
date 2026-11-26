@@ -13,6 +13,9 @@ data class Recurso(val clave: String, val intervaloMinimo: Duration) {
 
         fun torneo(codigo: Int) = Recurso("torneo:$codigo", Duration.ofMinutes(30))
 
+        /** La ficha de un club (dirección, contacto) cambia poco: como el listado. */
+        fun club(codigo: Int) = Recurso("club:$codigo", Duration.ofDays(7))
+
         /** El ranking se pide por división: la página sin filtro tarda más que el timeout de RNF03. */
         fun ranking(division: String) = Recurso("ranking:$division", Duration.ofDays(1))
 

@@ -78,6 +78,9 @@ dependencies {
     implementation(libs.retrofit.converter.scalars)
     implementation(libs.jsoup)
 
+    // RF04: una lectura de ubicación aproximada (Fused Location Provider)
+    implementation(libs.play.services.location)
+
     // Segundo plano (WorkManager)
     implementation(libs.androidx.work.runtime.ktx)
 

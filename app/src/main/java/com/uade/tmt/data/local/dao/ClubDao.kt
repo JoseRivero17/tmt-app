@@ -16,6 +16,16 @@ abstract class ClubDao {
     @Query("SELECT * FROM clubes WHERE codigo = :codigo")
     abstract fun observar(codigo: Int): Flow<ClubEntity?>
 
+    @Query("SELECT * FROM clubes")
+    abstract suspend fun obtenerTodos(): List<ClubEntity>
+
+    @Query("SELECT * FROM clubes WHERE codigo = :codigo")
+    abstract suspend fun obtener(codigo: Int): ClubEntity?
+
+    /** Guarda la ficha de un club (RF04, detalle). */
+    @Upsert
+    abstract suspend fun guardarFicha(club: ClubEntity)
+
     @Transaction
     open suspend fun reemplazarTodos(clubes: List<ClubEntity>) {
         borrarTodos()
