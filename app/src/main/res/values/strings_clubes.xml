@@ -1,0 +1,38 @@
+<resources>
+    <!-- RF04: clubes cercanos y detalle de club -->
+    <string name="clubes_titulo">Clubes</string>
+
+    <!-- G1: antes de pedir el permiso -->
+    <string name="clubes_permiso_titulo">Encontrá dónde jugar cerca tuyo</string>
+    <string name="clubes_permiso_explicacion">Usamos tu ubicación aproximada una sola vez para ordenar los clubes por distancia. No la guardamos ni la compartimos.</string>
+    <string name="clubes_usar_ubicacion">Usar mi ubicación</string>
+    <string name="clubes_buscar_por_localidad">Buscar por localidad</string>
+
+    <!-- G3 / G4 -->
+    <string name="clubes_buscar_hint">Buscar por localidad o nombre</string>
+    <string name="clubes_limpiar_busqueda">Borrar búsqueda</string>
+    <string name="clubes_cerca_de_vos">Cerca de vos</string>
+    <string name="clubes_ordenados_por_distancia">Ordenados por distancia a tu ubicación aproximada</string>
+    <string name="clubes_buscando_ubicacion">Buscando tu ubicación…</string>
+    <string name="clubes_sin_ubicacion">No pudimos obtener tu ubicación. Revisá que esté activada en el teléfono.</string>
+    <string name="clubes_permiso_rechazado">Sin permiso de ubicación. Podés buscar por localidad o activarlo en Ajustes.</string>
+    <string name="clubes_ajustes">Ajustes</string>
+    <plurals name="clubes_resultados">
+        <item quantity="one">%1$d club para \"%2$s\"</item>
+        <item quantity="other">%1$d clubes para \"%2$s\"</item>
+    </plurals>
+    <string name="clubes_sin_coincidencias">Ningún club coincide con la búsqueda.</string>
+    <string name="clubes_sin_clubes">No hay clubes publicados.</string>
+    <string name="clubes_distancia_accesible">a %1$s</string>
+
+    <!-- G5: detalle de club -->
+    <string name="clubes_detalle_titulo">Club</string>
+    <string name="clubes_volver">Volver</string>
+    <string name="clubes_a_distancia">A %1$s de vos</string>
+    <string name="clubes_como_llegar">Cómo llegar</string>
+    <string name="clubes_llamar">Llamar</string>
+    <string name="clubes_detalle_contacto">Contacto</string>
+    <string name="clubes_detalle_sin_direccion">El sitio no publica la dirección de este club.</string>
+    <string name="clubes_sin_app_mapas">No encontramos una app para abrir el mapa.</string>
+    <string name="clubes_sin_app_telefono">No encontramos una app para llamar.</string>
+</resources>

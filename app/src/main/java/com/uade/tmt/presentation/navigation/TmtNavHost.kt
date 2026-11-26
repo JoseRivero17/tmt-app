@@ -45,7 +45,8 @@ fun TmtNavHost(
             }
         }
         composable<Ranking> { RankingScreen() }
-        composable<Clubes> { ClubesScreen() }
+        // El detalle del club se suma en el próximo commit.
+        composable<Clubes> { ClubesScreen(onClubClick = { _, _ -> }) }
         composable<Perfil> { PerfilScreen(onIniciarSesion = { navController.navigate(Login) }) }
         composable<Login> {
             LoginScreen(
