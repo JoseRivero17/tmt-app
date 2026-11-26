@@ -22,6 +22,13 @@ data object Clubes
 @Serializable
 data object Perfil
 
+/** RF02: pantallas internas (no van en la barra inferior). */
+@Serializable
+data object Login
+
+@Serializable
+data class Reserva(val torneoCodigo: Int)
+
 /** Pantallas dentro de la sección Jugadores (RF03). */
 @Serializable
 data object RankingLista

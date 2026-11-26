@@ -24,6 +24,7 @@
     <string name="torneos_estado_cancelado">Cancelado</string>
     <string name="torneos_estado_inscripcion">Inscripción abierta</string>
     <string name="torneos_estado_sin_inscripcion">Sin inscripción online</string>
+    <string name="torneos_inscripcion_sin_conexion">Necesitás conexión a internet para inscribirte: el sitio confirma el lugar en el momento.</string>
     <string name="torneos_aviso_cancelado">Este torneo fue cancelado. No se puede reservar un lugar.</string>
     <string name="torneos_detalle_club">Club organizador</string>
     <string name="torneos_detalle_divisiones">Divisiones</string>

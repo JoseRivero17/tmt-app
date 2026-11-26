@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- RF02: enlaces al sitio (se abren en el navegador) -->
+    <string name="url_registro" translatable="false">https://www.tenisdemesaparatodos.com/jugadores_alta.asp</string>
+    <string name="url_recuperar_clave" translatable="false">https://www.tenisdemesaparatodos.com/jugadores_acceso.asp?accion=recuperar</string>
+    <string name="url_torneo_sitio" translatable="false">https://www.tenisdemesaparatodos.com/torneos_ampliar.asp?codigo=%1$d</string>
+
+    <!-- RF02: login -->
+    <string name="login_titulo">Ingresar</string>
+    <string name="login_volver">Volver</string>
+    <string name="login_explicacion">Ingresá con tu código de jugador y tu clave del sitio del circuito.</string>
+    <string name="login_codigo">Código de jugador</string>
+    <string name="login_clave">Clave</string>
+    <string name="login_ingresar">Ingresar</string>
+    <string name="login_ingresando">Ingresando…</string>
+    <string name="login_registrarme">Registrarme</string>
+    <string name="login_olvide_clave">Olvidé mi clave</string>
+    <string name="login_modo_demo">Modo demo: código 12345, clave demo</string>
+    <string name="login_error_datos_incompletos">Completá tu código y tu clave.</string>
+    <string name="login_error_credenciales">El código o la clave no son correctos.</string>
+    <string name="login_error_sin_conexion">No hay conexión a internet. Conectate y volvé a intentar.</string>
+    <string name="login_error_sitio">El sitio del circuito no respondió como esperábamos. Intentá de nuevo en unos minutos.</string>
+
+    <!-- RF02: reserva -->
+    <string name="reserva_titulo">Inscribirme</string>
+    <string name="reserva_volver">Volver</string>
+    <string name="reserva_cargando">Buscando las categorías…</string>
+    <string name="reserva_error_opciones">No pudimos leer el formulario de inscripción del sitio.</string>
+    <string name="reserva_sin_categorias">Este torneo no tiene categorías para inscribirse.</string>
+    <string name="reserva_sesion_requerida">Para inscribirte tenés que iniciar sesión con tu cuenta del circuito.</string>
+    <string name="reserva_iniciar_sesion">Iniciar sesión</string>
+    <string name="reserva_elegi_categoria">Elegí tu categoría</string>
+    <string name="reserva_horario">%1$s h</string>
+    <string name="reserva_condiciones_titulo">Condiciones del torneo</string>
+    <string name="reserva_condiciones">Acepto compartir mis datos de jugador con el organizador del torneo y que la organización no se responsabiliza por lesiones, pérdidas o daños durante el evento.</string>
+    <string name="reserva_confirmar">Confirmar inscripción</string>
+    <string name="reserva_enviando">Enviando…</string>
+    <string name="reserva_sin_conexion_aviso">Sin conexión: la inscripción necesita internet y no se guarda para enviarla después.</string>
+    <string name="reserva_resultado_reservada">Lugar reservado</string>
+    <string name="reserva_resultado_reservada_detalle">Categoría %1$s</string>
+    <string name="reserva_resultado_reservada_detalle_horario">Categoría %1$s · %2$s h</string>
+    <string name="reserva_resultado_espera">Quedaste en lista de espera</string>
+    <string name="reserva_resultado_espera_detalle">Categoría %1$s. Si se libera un lugar, el organizador te avisa.</string>
+    <string name="reserva_resultado_sin_conexion">No hay conexión a internet. La inscripción no se envió.</string>
+    <string name="reserva_resultado_error_sitio">El sitio no respondió como esperábamos. No podemos asegurar que la inscripción se haya hecho.</string>
+    <string name="reserva_resultado_incierta">No pudimos confirmar tu reserva. Revisá en el sitio si quedaste inscripto antes de reintentar.</string>
+    <string name="reserva_ver_en_sitio">Ver el torneo en el sitio</string>
+    <string name="reserva_volver_torneo">Volver al torneo</string>
+
+    <!-- RF02: Mi TMT -->
+    <string name="perfil_sin_sesion">Iniciá sesión para inscribirte a torneos y ver tus inscripciones.</string>
+    <string name="perfil_iniciar_sesion">Iniciar sesión</string>
+    <string name="perfil_mis_inscripciones">Mis inscripciones</string>
+    <string name="perfil_sin_inscripciones">Todavía no te inscribiste a ningún torneo desde la app.</string>
+    <string name="perfil_cerrar_sesion">Cerrar sesión</string>
+    <string name="perfil_torneo_codigo">Torneo %1$d</string>
+    <string name="perfil_inscripcion_detalle">Categoría %1$s · %2$s</string>
+    <string name="perfil_inscripcion_fecha">Registrada el %1$s</string>
+    <string name="perfil_estado_reservada">Reservada</string>
+    <string name="perfil_estado_lista_espera">Lista de espera</string>
+    <string name="perfil_estado_no_figura">No figura</string>
+    <string name="formato_fecha_inscripcion" translatable="false">dd/MM/yyyy</string>
+
+    <!-- RF02: detalle del torneo -->
+    <string name="torneos_inscribirme">Inscribirme</string>
+</resources>
